@@ -1,0 +1,83 @@
+{
+    "projects":[
+        {
+            "title":"My Portfolio",
+            "link": {
+                "url":"davintristanieson.github.io/portfolio",
+                "text":"davintristanieson.github.io/portfolio"
+            },
+            "description": "I needed a place to store and display all the projects (at least, those related to front-end web development) that I plan to make in the future. Moreover,  I need to start piling up projects for my portfolio, thus this project. \nI used Svelte in the making of this project because I enjoy its considerable lightweightedness in node_modules size compared to React. Besides, although the mix of HTML, CSS, and JavaScript in one file is a bit unnerving at first, it's alright when you get used to it.",
+            "image":{
+                "url":"./Resources/Screenshot 1.png",
+                "text":"My Portfolio Thumbnail"
+            },
+            "tags":["HTML, CSS, and JS","Svelte"],
+            "gallery":[
+                {
+                    "url":"./Resources/Screenshot 3.png",
+                    "text":"Desktop View - Projects"
+                },
+                {
+                    "url":"./Resources/Screenshot 2.png",
+                    "text":"Mobile view - About"
+                },
+                {
+                    "url":"./Resources/Screenshot 4.png",
+                    "text":"Mobile view - Projects"
+                }
+            ]
+        }
+    ],
+    "about": {
+        "name":"Davin Tristan Ieson",
+        "selfie":"./Resources/my-photo.png",
+        "lists":[
+            {
+                "title":"Links",
+                "contents":[
+                    {
+                        "url":"mailto:davin.tristan@gmail.com",
+                        "text":"Email"
+                    },
+                    {
+                        "url":"https://www.linkedin.com/in/davin-tristan-ieson-4246aa23a",
+                        "text":"LinkedIn"
+                    },
+                    {
+                        "url":"https://github.com/DavinTristanIeson",
+                        "text":"GitHub"
+                    }
+                ]
+            },
+            {
+                "title":"Skills",
+                "contents":["HTML","CSS","JavaScript","Svelte"]
+            },
+            {
+                "title":"Languages",
+                "contents":["Indonesian","English","Mandarin"]
+            }
+        ],
+        "articles":[
+            {
+                "title":"Profile",
+                "contents":"Informatics Engineering student eager to deepen his knowledge in web and mobile development. Knowledgeable about front-end web development and able to work well in a team. Likes experimenting with software in his spare time.",
+                "list":[],
+                "isCollapsed":false
+            },
+            {
+                "title":"Education",
+                "contents":"",
+                "list":[
+                    {
+                        "title":"Bachelor of Informatics Engineering (Ongoing), University Mikroskil, Medan",
+                        "date":"OCT 2021 - PRESENT",
+                        "description":"Currently on 2nd semester",
+                        "list":[]
+                    }
+                ],
+                "isCollapsed":false
+            }
+        ]
+    }
+}
