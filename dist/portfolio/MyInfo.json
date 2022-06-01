@@ -3,8 +3,8 @@
         {
             "title":"My Portfolio",
             "link": {
-                "url":"davintristanieson.github.io/portfolio",
-                "text":"davintristanieson.github.io/portfolio"
+                "url":"https://davintristanieson.github.io/portfolio/public",
+                "text":"davintristanieson.github.io/portfolio/public"
             },
             "description": "I needed a place to store and display all the projects (at least, those related to front-end web development) that I plan to make in the future. Moreover,  I need to start piling up projects for my portfolio, thus this project. \nI used Svelte in the making of this project because I enjoy its considerable lightweightedness in node_modules size compared to React. Besides, although the mix of HTML, CSS, and JavaScript in one file is a bit unnerving at first, it's alright when you get used to it.",
             "image":{
