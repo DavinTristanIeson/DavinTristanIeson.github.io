@@ -3,8 +3,8 @@
         {
             "title":"My Portfolio",
             "link": {
-                "url":"https://davintristanieson.github.io/portfolio/public",
-                "text":"davintristanieson.github.io/portfolio/public"
+                "url":"https://davintristanieson.github.io/dist/portfolio/",
+                "text":"davintristanieson.github.io/dist/portfolio"
             },
             "description": "I needed a place to store and display all the projects (at least, those related to front-end web development) that I plan to make in the future. Moreover,  I need to start piling up projects for my portfolio, thus this project. \nI used Svelte in the making of this project because I enjoy its considerable lightweightedness in node_modules size compared to React. Besides, although the mix of HTML, CSS, and JavaScript in one file is a bit unnerving at first, it's alright when you get used to it.",
             "image":{
@@ -26,6 +26,17 @@
                     "text":"Mobile view - Projects"
                 }
             ]
+        },
+        {
+            "title":"Many-In-One Calculator",
+            "link": {
+                "url":"https://davintristanieson.github.io/dist/many-in-one-calculator/",
+                "text":"davintristanieson.github.io/dist/many-in-one-calculator"
+            },
+            "description": "This project was started out of annoyance of having to open many tabs of online calculation websites and calculator applications. I'll update this project from time to time whenever I need any additional tools.",
+            "image":{
+                
+            }
         }
     ],
     "about": {
