@@ -33,10 +33,30 @@
                 "url":"https://davintristanieson.github.io/dist/many-in-one-calculator/",
                 "text":"davintristanieson.github.io/dist/many-in-one-calculator"
             },
-            "description": "This project was started out of annoyance of having to open many tabs of online calculation websites and calculator applications. I'll update this project from time to time whenever I need any additional tools.",
+            "description": "This project was started out of annoyance of having to open many tabs of online calculation websites and calculator applications. I'll update this project from time to time whenever I need any additional tools.\nCurrent tools included: basic calculator, fraction calculator, factors (isPrime, factorization, GCD, LCM), basic trigonometry, permutation/combination, and number-base converter.",
             "image":{
-                
-            }
+                "url":"./Resources/Calculator Screenshot 1.png",
+                "text":"Desktop View - Many-In-One Calculator"
+            },
+            "tags":["HTML, CSS, and JS","Svelte","TypeScript"],
+            "gallery":[
+                {
+                    "url":"./Resources/Calculator Screenshot 2.png",
+                    "text":"Mobile View - Many-In-One Calculator"
+                },
+                {
+                    "url":"./Resources/Calculator Screenshot 3.png",
+                    "text":"Component Options - Many-In-One Calculator"
+                },
+                {
+                    "url":"./Resources/Calculator Screenshot 4.png",
+                    "text":"Notes - Many-In-One Calculator"
+                },
+                {
+                    "url":"./Resources/Calculator Screenshot 5.png",
+                    "text":"Demonstration - Many-In-One Calculator"
+                }
+            ]
         }
     ],
     "about": {
