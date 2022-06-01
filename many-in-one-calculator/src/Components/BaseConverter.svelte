@@ -84,7 +84,7 @@ import { onDestroy, update_await_block_branch } from "svelte/internal";
     .center-v input {width: 45%;}
     .center-h input {width: 100%;}
     input:disabled {
-        background-color: white;
-        color: black;
+        background-color: var(--theme-input);
+        color: var(--theme-dark);
     }
 </style>

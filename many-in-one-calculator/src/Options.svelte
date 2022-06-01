@@ -109,8 +109,9 @@ on:click|stopPropagation>
     button {
         margin: 10px;
         background-color: var(--theme-light);
+        color: var(--theme-dark);
         border: none;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: var(--slight-shadow);
     }
     button:hover {
         background-color: var(--theme-highlight);

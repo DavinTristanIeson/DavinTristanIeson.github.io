@@ -51,14 +51,30 @@ direction = {SwipeDirection.RIGHT}>
 		--theme-dim: #2a7429;
 		--theme-dark: #0a3508;
 		--theme-light: #ffffff;
+		--theme-input: #ffffff;
 		--slight-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 		--theme-disabled: #aaaaaa;
 		--theme-error: rgb(221, 42, 42);
 		--theme-snackbar: #444;
 	}
+	@media (prefers-color-scheme:dark){
+		:global(:root){
+			--theme-highlight: #4da84c;
+			--theme-main: #1d771b;
+			--theme-dim: #0c3309;
+			--theme-dark: #a8b4a8;
+			--theme-light: #3d423d;
+			--theme-input: #3d523d;
+			--slight-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+			--theme-disabled: #888;
+			--theme-error: rgb(221, 42, 42);
+			--theme-snackbar: rgb(145, 158, 147);
+		}
+	}
 	:global(body){
 		padding:0;
 		color: var(--theme-dark);
+		background-color: var(--theme-light);
 	}
 	:global(table){border-collapse: collapse;}
 	:global(table td, table th){
@@ -77,6 +93,14 @@ direction = {SwipeDirection.RIGHT}>
         font-size: 1.2em;
 		/* https://stackoverflow.com/questions/42421361/input-button-elements-not-shrinking-in-a-flex-container */
 		min-width: 0px;
+		border: 1px solid var(--theme-dim);
+		background-color: var(--theme-input);
+		color: var(--theme-dark);
+	}
+	:global(select){
+		background-color: var(--theme-input);
+		color: var(--theme-dark);
+		border: none;
 	}
 	:global(input[type="checkbox"]){
 		width: 16px;
@@ -109,6 +133,7 @@ direction = {SwipeDirection.RIGHT}>
         width: 70px;
 		height: 70px;
         background-color: var(--theme-light);
+		color: var(--theme-dark);
 	}
 	:global(.calc-btn:hover) {background-color: var(--theme-highlight);}
 	:global(.input-w-btn) {
@@ -136,6 +161,7 @@ direction = {SwipeDirection.RIGHT}>
         row-gap: 10px;
 	}
 	:global(.disabled) {background-color: var(--theme-disabled);}
+	:global(.disabled:hover){background-color: var(--theme-disabled);}
     :global(.active) {background-color: var(--theme-highlight);}
 	:global(.calculator-grid .calc-btn){margin: 0px;}
 	:global(.max-500-y){
@@ -145,7 +171,7 @@ direction = {SwipeDirection.RIGHT}>
 	@media screen and (max-width: 420px){
 		:global(.input-w-btn input) {margin: 3px;}
     	:global(.input-w-btn button) {margin: 3px; font-size: 0.6em;}
-		:global(.calc-btn){ width: 50px; height: 50px;}
+		:global(.calc-btn){ width: 55px; height: 55px;}
         :global(.calculator-grid) {
             column-gap: 5px;
             row-gap: 5px;

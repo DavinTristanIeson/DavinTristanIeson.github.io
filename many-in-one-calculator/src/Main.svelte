@@ -85,6 +85,9 @@ direction = {SwipeDirection.NONE}>
         display:grid;
         grid-template-columns: 33% 33% 33%;
     }
+    .details line,
+    .details circle:not(.smalldot) {stroke: var(--theme-dark);}
+    .details .smalldot {fill: var(--theme-dark)}
     .details:hover line,
     .details:hover circle:not(.smalldot) {stroke: var(--theme-highlight);}
     .details:hover .smalldot {fill: var(--theme-highlight)}
@@ -97,7 +100,7 @@ direction = {SwipeDirection.NONE}>
         align-items: center;
         white-space: pre-wrap;
         overflow-x: auto;
-        background-color: white;
+        background-color: var(--theme-light);
         z-index: 0;
     }
     .popup {
@@ -108,11 +111,11 @@ direction = {SwipeDirection.NONE}>
         width: 60vw;
         padding: 20px;
         font-size: 1.4em;
-        background-color: white;
+        background-color: var(--theme-light);
         box-shadow: var(--slight-shadow);
         max-height: 80vh;
         z-index: 25;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
     h2 {color: var(--theme-dark);
     padding: 0; margin:0;}

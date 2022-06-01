@@ -68,7 +68,7 @@
         <button class="calc-btn" on:click={()=>{calculator.calculate("exp2")}}>x&#178;</button>
         <button class="calc-btn" on:click={()=>{calculator.switchFocus()}}>&#9660;</button>
         <button class="calc-btn" on:click={()=>{calculator.calculate("inv")}}>1/x</button>
-        <button class="calc-btn" on:click={()=>{}}>1.0</button>
+        <button class="calc-btn disabled" on:click={()=>{}}></button>
     </div>
     <table>
         <tr>
@@ -93,7 +93,7 @@
         text-align: left;
         padding: 5px;
     }
-    input[type=text].focused {background-color: var(--theme-light)}
+    input[type=text].focused {background-color: var(--theme-input)}
     hr {
         height: 2px;
         margin: 20px 0px 0px;
