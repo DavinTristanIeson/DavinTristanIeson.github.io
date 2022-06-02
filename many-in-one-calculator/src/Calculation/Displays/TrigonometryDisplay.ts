@@ -1,3 +1,5 @@
+import { BackendUtils } from "../../Utils/BackEndUtils";
+
 export class TrigonometryDisplay {
     onError: (message: string) => void;
     onUpdate: (updated: { [key: string]: string; }) => void;
@@ -51,20 +53,8 @@ export class TrigonometryDisplay {
         const PRECISION = 1e7;
         return Math.round(number*PRECISION)/PRECISION;
     }
-    private assertIsntNaN(input:number){
-        if (isNaN(input)){
-            throw "Input must be a valid number";
-        }
-    }
     calculateTrigonometry(trigInput:string){
-        let value;
-        try {
-            value = parseFloat(trigInput);
-            this.assertIsntNaN(value);
-        } catch (e){
-            this.onError(e);
-            return;
-        }
+        let value = BackendUtils.tryCatch<number>(()=>BackendUtils.parseAsFloat(trigInput),this.onError);
         const params = ["sin","cos","tan","cosec","sec","cot"];
         let sincostan:number[];
         if (!this.inversed){

@@ -1,4 +1,12 @@
-export class Converter {
+import { DisplayBackend, BackendUtils, UserError } from "../../Utils/BackEndUtils";
+
+export type UpdatePayload = {
+    from:string,
+    to:string,
+    fromIndex:number,
+    toIndex:number
+}
+export class Converter implements DisplayBackend<UpdatePayload> {
     from:string = "";
     to:string = "";
     fromType:number = 2;
@@ -8,9 +16,9 @@ export class Converter {
     static readonly BASES = [2,8,10,16];
     static readonly BITSTEPS = [2**8,2**16,2**32,2**64];
     private static readonly ERROR_MESSAGES = ["Binary strings must only use 1s or 0s!","Octal numbers should only have digits between 0-7!","Decimal numbers should only digits between 0-9!","Hexadecimal numbers should only contain digits from 0-9 or characters between a-f!"];
-    onError: (message:string)=>void;
-    onUpdate: (updated:{[key:string]:string})=>void;
-    constructor(onUpdate:(updated:{[key:string]:string})=>void,onError:(message:string)=>void){
+    onUpdate: (updated: UpdatePayload) => void;
+    onError: (message: string) => void;
+    constructor(onUpdate:(updated: UpdatePayload) => void,onError:(message:string)=>void){
         this.onUpdate = onUpdate;
         this.onError = onError;
     }
@@ -18,8 +26,8 @@ export class Converter {
         this.onUpdate({
             from: this.from,
             to: this.to,
-            fromIndex: this.fromType.toString(),
-            toIndex: this.toType.toString(),
+            fromIndex: this.fromType,
+            toIndex: this.toType,
         });
     }
     swap(){
@@ -42,9 +50,12 @@ export class Converter {
         this.isTwoComplement = updated.isTwoComplement;
     }
     convert(){
-        let temp = parseInt(this.from,Converter.BASES[this.fromType]);
-        if (isNaN(temp)){
-            this.onError(Converter.ERROR_MESSAGES[this.fromType]);
+        let temp;
+        try {
+            temp = parseInt(this.from,Converter.BASES[this.fromType]);
+            if (isNaN(temp)) throw new UserError(Converter.ERROR_MESSAGES[this.fromType]);
+        } catch (e){
+            BackendUtils.errorHandling(e,this.onError);
             return;
         }
         if (this.isTwoComplement && temp < 0){

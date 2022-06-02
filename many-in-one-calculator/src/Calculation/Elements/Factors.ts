@@ -1,4 +1,4 @@
-import { useWorker } from "../Utils";
+import { UserError, useWorker } from "../../Utils/BackEndUtils";
 
 export function isPrime(number:number): Promise<boolean> {
     return useWorker("isPrime",number);
@@ -23,7 +23,7 @@ function __lcm(x:number,y:number){
     return Math.abs(x*y)/__gcd(x,y);
 }
 export function gcd(...numbers: number[]): number {
-    if (numbers.length === 0) throw "Empty argument for GCD!";
+    if (numbers.length === 0) throw new UserError("Empty argument for GCD!");
     let GCD:number = numbers[0];
     for (let i = 1; i < numbers.length; i++){
         GCD = __gcd(GCD,numbers[i]);
@@ -31,7 +31,7 @@ export function gcd(...numbers: number[]): number {
     return GCD;
 }
 export function lcm(...numbers: number[]): number{
-    if (numbers.length === 0) throw "Empty argument for LCM!";
+    if (numbers.length === 0) throw new UserError("Empty argument for LCM!");
     let LCM:number = numbers[0];
     for (let i = 1; i < numbers.length; i++){
         LCM = __lcm(LCM,numbers[i]);

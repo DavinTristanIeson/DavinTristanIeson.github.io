@@ -1,12 +1,13 @@
 <script type="ts">
-    import Calculator from "./Components/Calculator.svelte";
-    import FractionalCalculator from "./Components/FractionalCalculator.svelte";
-    import Factors from "./Components/Factors.svelte";
-    import Trigonometry from "./Components/Trigonometry.svelte";
-    import Permutation from "./Components/Permutation.svelte";
-    import BaseConverter from "./Components/BaseConverter.svelte";
-    import Backdrop from "./Components/Backdrop.svelte";
-    import { componentManager,CalculationComponent,SwipeDirection } from "./Utils";
+    import Calculator from "../Components/Calculator.svelte";
+    import FractionalCalculator from "../Components/FractionalCalculator.svelte";
+    import Factors from "../Components/Factors.svelte";
+    import Trigonometry from "../Components/Trigonometry.svelte";
+    import Permutation from "../Components/Permutation.svelte";
+    import BaseConverter from "../Components/BaseConverter.svelte";
+    import Backdrop from "../UI/Backdrop.svelte";
+    import TruthTable from "../Components/TruthTable.svelte";
+    import { componentManager,CalculationComponent,Direction } from "../Utils";
     import { fly,scale } from "svelte/transition";
     import { bounceInOut } from "svelte/easing";
     
@@ -17,6 +18,7 @@
         "trigonometry":Trigonometry,
         "permutation":Permutation,
         "baseConverter":BaseConverter,
+        "truthTable":TruthTable,
     };
     let mountedComponents:CalculationComponent[] = [];
     let popupContents:string = "";
@@ -49,7 +51,7 @@ out:fly={{y:300}}>
 {#if popupContents.length > 0}
 <Backdrop
 onCloseModal={()=>{popupContents = "";}}
-direction = {SwipeDirection.NONE}>
+direction = {Direction.NONE}>
     <div class="popup" transition:scale on:click|stopPropagation>
         <h2>Alert</h2>
         {popupContents}

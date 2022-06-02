@@ -1,6 +1,6 @@
 <script type="ts">
-    import {factorial, stringPermutation, FORMULAS, OPERATIONS} from "../Calculation/Permutation";
-    import { assertIsntNaN,onEnter,onArrowChangeFocus, assertIsntNegative } from "../Utils";
+    import {factorial, stringPermutation, FORMULAS, OPERATIONS} from "../Calculation/Elements/Permutation";
+    import { Direction, FrontendUtils,BackendUtils } from "../Utils";
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
     let permcombiSettings: [boolean,boolean] = [false,false],
@@ -21,8 +21,13 @@
     }
     function factorialDivision(){
         const operands = [parseInt(factDivInputUp.value),parseInt(factDivInputDown.value)];
-        if (!assertIsntNaN(onError,...operands)) return;
-        else if (!assertIsntNegative(onError,...operands)) return;
+        try {
+            BackendUtils.assertIsntNaN(...operands);
+            BackendUtils.assertIsntNegative(...operands);
+        } catch (e){
+            BackendUtils.errorHandling(e,onError);
+            return;
+        }
         if (operands[0] < operands[1]){
             factorialDivisionResult = (1/factorial(operands[1],operands[0])).toString();
         } else {
@@ -31,9 +36,14 @@
     }
     function calcPermCombi(){
         const operands = [parseInt(permcombiInputLeft.value),parseInt(permcombiInputRight.value)];
-        if (!assertIsntNaN(onError,...operands)) return;
-        else if (!assertIsntNegative(onError,...operands)) return;
-        else if (operands[0] < operands[1]){
+        try {
+            BackendUtils.assertIsntNaN(...operands);
+            BackendUtils.assertIsntNegative(...operands);
+        } catch (e){
+            BackendUtils.errorHandling(e,onError);
+            return;
+        }
+        if (operands[0] < operands[1]){
             onError("The left operand of the Combination/Permutation function should be greater than the right operand!")
             return;
         }
@@ -62,16 +72,16 @@
             <div class="bigger">
                 <input type="number" class="shorter" min="0"
                 on:keydown={(e)=>{
-                    onEnter(e,factorialDivision);
-                    onArrowChangeFocus(e,factDivInputDown,true);
+                    FrontendUtils.onEnter(e,factorialDivision);
+                    FrontendUtils.onArrowChangeFocus(e,factDivInputDown,Direction.UP|Direction.DOWN);
                 }} bind:this={factDivInputUp}> !
             </div>
             <hr>
             <div class="bigger">
                 <input type="number" class="shorter" min="0"
                 on:keydown={(e)=>{
-                    onEnter(e,factorialDivision);
-                    onArrowChangeFocus(e,factDivInputUp,true);
+                    FrontendUtils.onEnter(e,factorialDivision);
+                    FrontendUtils.onArrowChangeFocus(e,factDivInputUp,Direction.UP|Direction.DOWN);
                 }} bind:this={factDivInputDown}> !
             </div>
         </div>
@@ -96,14 +106,14 @@
         <p class="bigger">{#if permcombiSettings[0]}P{:else}C{/if}(</p>
         <input type="number" class="shorter" min="0"
         on:keydown={(e)=>{
-            onEnter(e,calcPermCombi);
-            onArrowChangeFocus(e,permcombiInputRight,false);
+            FrontendUtils.onEnter(e,calcPermCombi);
+            FrontendUtils.onArrowChangeFocus(e,permcombiInputRight,Direction.LEFT|Direction.RIGHT);
         }} bind:this={permcombiInputLeft}>
         <p class="bigger">,</p>
         <input type="number" class="shorter" min="0"
         on:keydown={(e)=>{
-            onEnter(e,calcPermCombi);
-            onArrowChangeFocus(e,permcombiInputLeft,false);
+            FrontendUtils.onEnter(e,calcPermCombi);
+            FrontendUtils.onArrowChangeFocus(e,permcombiInputLeft,Direction.LEFT|Direction.RIGHT);
         }} bind:this={permcombiInputRight}>
         <p class="bigger">) =</p>
         <div class="result">{permcombiResult}</div>
@@ -112,7 +122,7 @@
     <hr>
     <h3>String Permutation</h3>
     <input type="text" bind:value={permutStringInput}
-    on:keydown={(e)=>{onEnter(e,stringPermut)}} class="full-width">
+    on:keydown={(e)=>{FrontendUtils.onEnter(e,stringPermut)}} class="full-width">
     <div class="result full-width max-500-y">{permutStringResult}</div>
     <hr>
 </div>

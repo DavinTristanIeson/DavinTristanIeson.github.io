@@ -1,8 +1,8 @@
 <script type="ts">
     import { createEventDispatcher } from "svelte";
-    import { onArrowChangeFocus, onEnter, useMediaQuery } from "../Utils";
-    import { Converter } from "../Calculation/BaseConversion";
-import { onDestroy, update_await_block_branch } from "svelte/internal";
+    import { FrontendUtils,useMediaQuery } from "../Utils";
+    import { Converter,UpdatePayload } from "../Calculation/Elements/BaseConversion";
+    import { onDestroy } from "svelte/internal";
     const dispatch = createEventDispatcher();
     function onError(message:string){
         dispatch("alert",{
@@ -14,11 +14,11 @@ import { onDestroy, update_await_block_branch } from "svelte/internal";
     let inputs:[HTMLInputElement,HTMLInputElement] = [null, null];
     let selects:[HTMLSelectElement,HTMLSelectElement] = [null, null];
     let isTwoComplement:boolean = converter.isTwoComplement;
-    function onUpdate(updated:{[key:string]:string}){
+    function onUpdate(updated:UpdatePayload){
         inputs[0].value = updated.from;
         inputs[1].value = updated.to;
-        selects[0].selectedIndex = parseInt(updated.fromIndex);
-        selects[1].selectedIndex = parseInt(updated.toIndex);
+        selects[0].selectedIndex = updated.fromIndex;
+        selects[1].selectedIndex = updated.toIndex;
     }
     function onAltKey(e:KeyboardEvent){
         if (e.key === 'Alt'){
@@ -65,7 +65,7 @@ import { onDestroy, update_await_block_branch } from "svelte/internal";
     <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen}>
         <input type="text" bind:this={inputs[0]}
         on:keydown = {(e)=>{
-            onEnter(e,()=>{convert(false)});
+            FrontendUtils.onEnter(e,()=>{convert(false)});
             onAltKey(e);
         }}>
         <button on:click={()=>{bringUpToDate(); converter.swap()}}>&#8646;</button>

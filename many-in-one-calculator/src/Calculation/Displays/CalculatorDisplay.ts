@@ -1,7 +1,7 @@
-import type { Calculator,FractionCalculator } from "./Calculator";
-import type { CalculatorSystem } from "./CalculatorSystem";
-import { Fraction } from "./Fraction";
-import { assertIsntNaN } from "../Utils";
+import type { Calculator,FractionCalculator } from "../Elements/Calculator";
+import type { CalculatorSystem } from "../Elements/CalculatorSystem";
+import { Fraction } from "../Elements/Fraction";
+import { BackendUtils } from "../../Utils/BackEndUtils";
 
 interface CalculatorDisplayI<T extends number|bigint|Fraction> {
     onError: (message:string)=>void;
@@ -74,46 +74,52 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
         this.pastCalculated.textContent = this.calculator.getOperationQueue();
     }
     assertLessThanInfinity(checkme?:number){
-        if ((checkme && checkme === Infinity) || this.calculator.recent() === Infinity){
-            this.onError(`The output is larger than ${Number.MAX_VALUE}`);
-            return false;
+        if (checkme){
+            BackendUtils.assertLessThanInfinity(checkme);
+        } else {
+            BackendUtils.assertLessThanInfinity(this.calculator.recent());
         }
-        return true;
     }
     calculate(operation:string){
         // parse the input first without caring whether it's NaN or not
         let current:number = parseFloat(this.calculatorInput.value);
         // check if the operation is instantaneous
         let isInstant = this.calculator.isInstantOperation(operation);
-        if (isInstant){
-            // if the operation is instant, it executes instantly at the input area
-            if (operation !== "euler" && operation !== "pi" && !assertIsntNaN(this.onError,current)){
-                return;
-            }
-            // force operation executes the operation without saving it.
-            let result = this.calculator.forceOperation(current, operation);
-            if (!this.assertLessThanInfinity(result)) return;
-            this.calculatorInput.value = result.toString();
-        } else if (this.calculator.isPrepared()){
-            // if the calculator is already ready to execute operation (it already has the first operand and the queued operation)
-            if (!this.calculatorInput.value){
-                // if there's no input but another operation is about to be queued, just change the already queued operation to the new one
-                this.calculator.changeOperation(operation);
+        try {
+            if (isInstant){
+                // if the operation is instant, it executes instantly at the input area
+                if (operation !== "euler" && operation !== "pi") BackendUtils.assertIsntNaN(current);
+                // force operation executes the operation without saving it.
+                let result = this.calculator.forceOperation(current, operation);
+                BackendUtils.assertLessThanInfinity(result);
+                this.calculatorInput.value = result.toString();
+            } else if (this.calculator.isPrepared()){
+                // if the calculator is already ready to execute operation (it already has the first operand and the queued operation)
+                if (!this.calculatorInput.value){
+                    // if there's no input but another operation is about to be queued, just change the already queued operation to the new one
+                    this.calculator.changeOperation(operation);
+                } else {
+                    // execute the operation if everything else is correct
+                    BackendUtils.assertIsntNaN(current);
+                    this.calculator.executeOperation(current,operation);
+                }
             } else {
-                // execute the operation if everything else is correct
-                if (!assertIsntNaN(this.onError,current)) return;
-                this.calculator.executeOperation(current,operation);
+                // if there's no enqueued operation, then just queue the new operand and operation
+                BackendUtils.assertIsntNaN(current);
+                this.calculator.push({
+                    operand: current,
+                    operation: operation,
+                });
             }
-        } else {
-            // if there's no enqueued operation, then just queue the new operand and operation
-            if (!assertIsntNaN(this.onError,current)) return;
-            this.calculator.push({
-                operand: current,
-                operation: operation,
-            });
+        } catch (e){
+            BackendUtils.errorHandling(e,this.onError);
+            return;
         }
-        if (!this.assertLessThanInfinity()){
+        try {
+            this.assertLessThanInfinity()
+        } catch (e){
             this.calculator.pop();
+            BackendUtils.errorHandling(e,this.onError);
             return;
         }
         if (!operation){
@@ -124,6 +130,7 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
             this.vulnerableInput = true
             return;
         }
+        console.log(this.calculatorInput.value,"-",this.pastCalculated.textContent);
         this.pastCalculated.textContent = this.calculator.getOperationQueue();
         if (!isInstant) this.clear();
     }
@@ -215,6 +222,7 @@ export class FractionCalculatorDisplay implements CalculatorDisplayI<Fraction> {
         this.setFocus(true);
     }
     fillInputs(fraction:Fraction){
+        if (!fraction) return;
         this.numeratorInput.value = fraction.numerator.toString();
         this.denominatorInput.value = fraction.denominator.toString();
         this.mixedFraction.textContent = fraction.toMixedFraction();
@@ -231,7 +239,7 @@ export class FractionCalculatorDisplay implements CalculatorDisplayI<Fraction> {
         try {
             if (isInstant){
                 // if the operation is instant, it executes instantly at the input area
-                if (!assertIsntNaN(this.onError,numerator,denominator)) return;
+                BackendUtils.assertIsntNaN(numerator,denominator);
                 // force operation executes the operation without saving it.
                 let result = this.calculator.forceOperation(new Fraction(numerator,denominator),operation);
                 this.fillInputs(result);
@@ -241,32 +249,33 @@ export class FractionCalculatorDisplay implements CalculatorDisplayI<Fraction> {
                     // if there's no input but another operation is about to be queued, just change the already queued operation to the new one
                     this.calculator.changeOperation(operation);
                 } else {
-                    if (!assertIsntNaN(this.onError,numerator,denominator)) return;
+                    BackendUtils.assertIsntNaN(numerator,denominator);
                     // execute the operation if everything else is correct
                     this.calculator.executeOperation(new Fraction(numerator,denominator),operation);
                 }
             } else {
                 // if there's no enqueued operation, then just queue the new operand and operation
-                if (!assertIsntNaN(this.onError,numerator,denominator)) return;
+                BackendUtils.assertIsntNaN(numerator,denominator);
                 this.calculator.push({
                     operand: new Fraction(numerator,denominator),
                     operation: operation,
                 });
             }
-            this.setFocus(true);
-            if (!operation){
-                // if there's no operation (basically the '=' button), empty the past calculated value
-                // display the latest calculated value, and make it so that the input is 'vulnerable'.
-                this.fillInputs(this.calculator.recent());
-                this.pastCalculated.textContent = "";
-                this.vulnerableInput = true
-                return;
-            }
-            this.pastCalculated.textContent = this.calculator.getOperationQueue();
-            if (!isInstant) this.clear();
         } catch (e){
-            if (e === "Fraction denominators mustn't be 0!") this.onError(e);
+            BackendUtils.errorHandling(e,this.onError);
+            return;
         }
+        this.setFocus(true);
+        if (!operation){
+            // if there's no operation (basically the '=' button), empty the past calculated value
+            // display the latest calculated value, and make it so that the input is 'vulnerable'.
+            this.fillInputs(this.calculator.recent());
+            this.pastCalculated.textContent = "";
+            this.vulnerableInput = true
+            return;
+        }
+        this.pastCalculated.textContent = this.calculator.getOperationQueue();
+        if (!isInstant) this.clear();
     }
     flipSign(){
         // adds or removes the '-' prefix unless the input is just 0, for which a sign is unnecessary.

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Header from "./Components/Header.svelte";
+	import Header from "./Header.svelte";
 	import Notes from "./Notes.svelte";
 	import Options from "./Options.svelte";
 	import Main from "./Main.svelte";
-	import Backdrop from "./Components/Backdrop.svelte";
-	import { SwipeDirection } from "./Utils";
+	import Backdrop from "./Backdrop.svelte";
+	import { Direction } from "../Utils";
 
 	type tabType = "Notes"|"Options"|null;
 	let currentTab:tabType = null;
@@ -29,13 +29,13 @@
 {#if currentTab == "Notes"}
 <Backdrop
 onCloseModal = {()=>{switchTabs("Notes");}}
-direction = {SwipeDirection.LEFT}>
+direction = { Direction.LEFT }>
 	<Notes/>
 </Backdrop>
 {:else if currentTab == "Options"}
 <Backdrop
 onCloseModal = {()=>{switchTabs("Options");}}
-direction = {SwipeDirection.RIGHT}>
+direction = { Direction.RIGHT }>
 	<Options/>
 </Backdrop>
 {/if}
@@ -62,7 +62,7 @@ direction = {SwipeDirection.RIGHT}>
 			--theme-highlight: #4da84c;
 			--theme-main: #1d771b;
 			--theme-dim: #0c3309;
-			--theme-dark: #a8b4a8;
+			--theme-dark: #cccccc;
 			--theme-light: #3d423d;
 			--theme-input: #3d523d;
 			--slight-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);

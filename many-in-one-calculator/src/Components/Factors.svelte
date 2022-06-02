@@ -1,6 +1,7 @@
 <script type="ts">
-    import { getFactorTree,getFactorsOf,isPrime, gcd,lcm } from "../Calculation/Factors";
+    import { getFactorTree,getFactorsOf,isPrime, gcd,lcm } from "../Calculation/Elements/Factors";
     import { createEventDispatcher } from 'svelte';
+    import { BackendUtils,FrontendUtils } from "../Utils";
     const dispatch = createEventDispatcher();
     let factors:[number,number][] = [[1,1]];
     let factorTree:string = "1 x 1";
@@ -16,16 +17,8 @@
             message:message
         });
     }
-    function assertIsntNaN(number:number){
-        if (isNaN(number)){
-            onError("Input must be a proper integer!");
-            return true;
-        }
-        return false;
-    }
     function findFactors(){
-        let input = parseInt(numberInput);
-        if (assertIsntNaN(input)) return;
+        let input = BackendUtils.tryCatch<number>(()=>BackendUtils.parseAsFloat(numberInput),onError);
         factorOf = "Calculating...";
         factorTree = "Calculating...";
         factors = [];
@@ -36,8 +29,7 @@
         getFactorTree(input).then(facts => {factorTree = facts.join(" x ")});
     }
     function checkPrime(){
-        let input = parseInt(primeInput.value);
-        if (assertIsntNaN(input)) return;
+        let input = BackendUtils.tryCatch<number>(()=>BackendUtils.parseAsFloat(primeInput.value),onError);
         primeInput.style.backgroundColor = "var(--theme-disabled)";
         isPrime(input).then(boolean => {
             if (boolean){
@@ -58,10 +50,6 @@
         }
         console.log(numbers,gcdOutput,lcmOutput);
     }
-    function onEnter(e:KeyboardEvent,callback:()=>void){
-        if (e.key !== "Enter") return;
-        callback();
-    }
 </script>
 
 <article class="center-h">
@@ -69,12 +57,12 @@
     <div class="input-w-btn">
         <input type="number" placeholder="Number"
         bind:this={primeInput}
-        on:keydown={(e)=>{onEnter(e,checkPrime)}}
+        on:keydown={(e)=>{FrontendUtils.onEnter(e,checkPrime)}}
         on:focus={()=>{primeInput.style.backgroundColor = "var(--theme-light)"}}>
         <button on:click={checkPrime}>Is Prime</button> 
         <input type="number" placeholder="Number"
         bind:value={numberInput}
-        on:keydown={(e)=>{onEnter(e,findFactors)}}>
+        on:keydown={(e)=>{FrontendUtils.onEnter(e,findFactors)}}>
         <button on:click={findFactors}>Factorize</button>
     </div>
     <div class="full-width max-500-y">
@@ -96,7 +84,7 @@
     <div class="input-w-btn">
         <input type="text"
         bind:value={gcdLcmInputProto}
-        on:keydown={(e)=>{onEnter(e,findGCDnLCM)}}>
+        on:keydown={(e)=>{FrontendUtils.onEnter(e,findGCDnLCM)}}>
         <button on:click={findGCDnLCM}>GCD&LCM</button>
     </div>
     <table class="full-width">

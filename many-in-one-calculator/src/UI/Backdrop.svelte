@@ -1,8 +1,8 @@
 <script type="ts">
     import { fade } from "svelte/transition";
-    import { SwipeDirection,SwipeManager } from "../Utils";
+    import { Direction,SwipeManager } from "../Utils";
     export let onCloseModal:()=>void;
-    export let direction:SwipeDirection;
+    export let direction:Direction;
     const swiper = new SwipeManager({x:200,y:Infinity},onCloseModal,direction);
 </script>
 

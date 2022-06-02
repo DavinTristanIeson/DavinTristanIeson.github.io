@@ -1,6 +1,6 @@
 <script type="ts">
-    import { FractionCalculator } from "../Calculation/Calculator";
-    import { FractionCalculatorDisplay } from "../Calculation/CalculatorDisplay";
+    import { FractionCalculator } from "../Calculation/Elements/Calculator";
+    import { FractionCalculatorDisplay } from "../Calculation/Displays/CalculatorDisplay";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();

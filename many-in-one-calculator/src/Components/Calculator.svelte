@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Calculator } from "../Calculation/Calculator";
-    import { BasicCalculatorDisplay } from "../Calculation/CalculatorDisplay";
+    import { Calculator } from "../Calculation/Elements";
+    import { BasicCalculatorDisplay } from "../Calculation/Displays";
     import { createEventDispatcher } from "svelte";
     
     const calculator = new BasicCalculatorDisplay(new Calculator(),onError);

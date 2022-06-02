@@ -1,8 +1,8 @@
 <script lang="ts">
     import { fly,crossfade } from 'svelte/transition';
     import { flip } from 'svelte/animate';
-    import { componentManager, CalculationComponent, CalculationComponentManager} from "./Utils";
-import { onDestroy } from 'svelte';
+    import { componentManager, CalculationComponent } from "../Utils";
+    import { onDestroy } from 'svelte';
     const [send,receive] = crossfade({});
 
     let checkedCheckboxes:CalculationComponent[] = [];

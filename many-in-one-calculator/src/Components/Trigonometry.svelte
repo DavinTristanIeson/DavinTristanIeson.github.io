@@ -1,7 +1,7 @@
 <script type="ts">
-    import { TrigonometryDisplay } from "../Calculation/TrigonometryDisplay";
+    import { TrigonometryDisplay } from "../Calculation/Displays/TrigonometryDisplay";
     import { createEventDispatcher, onDestroy } from "svelte";
-    import { useMediaQuery } from "../Utils";
+    import { useMediaQuery,FrontendUtils } from "../Utils";
     const dispatch = createEventDispatcher();
     const display = new TrigonometryDisplay(onUpdate,onError);
     let trigInput:string = "";
@@ -33,10 +33,6 @@
         }
         trigInput = callback(value).toString();
     }
-    function onEnter(e:KeyboardEvent,callback:()=>void){
-        if (e.key !== "Enter") return;
-        callback();
-    }
     let isSmallScreen:boolean = false;
     const unsubscriber = useMediaQuery("screen and (max-width: 420px)").subscribe(data => {isSmallScreen = data});
     onDestroy(unsubscriber);
@@ -46,7 +42,7 @@
     <div class="input-w-btn">
         <label class="center-v">
         <input type="number" bind:value={trigInput} placeholder="0"
-        on:keydown={(e)=>{onEnter(e,()=>{calculate(false)})}}>{#if !inversed}{unit}{/if}
+        on:keydown={(e)=>{FrontendUtils.onEnter(e,()=>{calculate(false)})}}>{#if !inversed}{unit}{/if}
         </label>
         <button on:click={()=>{calculate(false)}}>Calculate</button>
     </div>

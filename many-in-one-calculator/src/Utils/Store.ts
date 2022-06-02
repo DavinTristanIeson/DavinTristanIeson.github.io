@@ -21,11 +21,6 @@ export class CalculationComponent {
     }
 }
 
-export const optionsSchema = {
-    "Calculators":["Calculator","Fraction Calculator"],
-    "Factors":["Factors", "Factor Tree", "GCD", "LCM","isPrime"],
-};
-
 export class CalculationComponentManager {
     selected:Writable<CalculationComponent[]>
     unselected:Writable<CalculationComponent[]>
@@ -49,8 +44,9 @@ export class CalculationComponentManager {
             "Press Enter while focused on an input field to execute the operation associated with it.\nFor keyboard users, you can use arrow keys to move between input field in the same category."),
         new CalculationComponent("Base Converter",
             "Deals with conversions between various bases of numbers, including binary, octal, decimal, and hexadecimal.",
-            "Two's Complement determines whether conversions of negative numbers should equal 2^8/2^16/2^32/2^64 - number or just add a minus sign in front of the converted number.\nNote that Two's Complement only works for up to numbers less or equal to 2^64.")
-    ];
+            "Two's Complement determines whether conversions of negative numbers should equal 2^8/2^16/2^32/2^64 - number or just add a minus sign in front of the converted number.\nNote that Two's Complement only works for up to numbers less or equal to 2^64."),
+        new CalculationComponent("Truth Table","","")
+        ];
     static STORAGE_NAME = "components";
     constructor(){
         this.selected = writable<CalculationComponent[]>([]);
@@ -93,48 +89,6 @@ export class CalculationComponentManager {
 
 export const componentManager = new CalculationComponentManager();
 
-export function useWorker<T,R>(type:string, ...args:T[]): Promise<R>{
-    const worker:Worker = new Worker("./build/worker.js");
-    worker.postMessage({
-        type:type,
-        args:args
-    });
-    return new Promise((resolve,reject)=>{
-        worker.onmessage = (e:MessageEvent) => {
-            resolve(e.data);
-            worker.terminate();
-        }
-    });
-}
-export function assertIsntNaN(onError:(string)=>void,...checkIfNaN:number[]){
-    for (let might of checkIfNaN){
-        if (isNaN(might)){
-            onError("Input must be a valid number!");
-            return false;
-        }
-    }
-    return true;
-}
-export function assertIsntNegative(onError:(string)=>void,...checkIfNeg:number[]){
-    for (let might of checkIfNeg){
-        if (might < 0){
-            onError("Input must be a positive number!");
-            return false;
-        }
-    }
-    return true;
-}
-export function onEnter(e:KeyboardEvent,callback:()=>void){
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    callback();
-}
-export function onArrowChangeFocus(e:KeyboardEvent,inputElement:HTMLInputElement,isVerticalKeystroke:boolean){
-    if ((isVerticalKeystroke && (e.key === "ArrowUp" || e.key === "ArrowDown")) || (e.key === "ArrowLeft" || e.key === "ArrowRight")){
-        e.preventDefault();
-        inputElement.focus();
-    }
-}
 // https://medium.com/@ricciutipaolo/how-to-check-for-media-queries-in-svelte-with-usemediaquery-604f14190035
 export function useMediaQuery(mediaQueryString:string){
     //we inizialize the readable as null and get the callback with the set function
@@ -152,46 +106,4 @@ export function useMediaQuery(mediaQueryString:string){
       });
       //then we return the readable
       return matches;
-}
-export type Vec2 = {x:number,y:number};
-export enum SwipeDirection {
-    NONE = 0,
-    LEFT = 1,
-    RIGHT = 2,
-    UP = 4,
-    DOWN = 8,
-}
-export class SwipeManager {
-    swipeStart:Vec2|null = null;
-    minDist:Vec2;
-    callback: (e:TouchEvent)=>void;
-    direction:SwipeDirection;
-    constructor(minDist:Vec2,callback:(e:TouchEvent)=>void,direction:SwipeDirection){
-        this.minDist = minDist;
-        this.callback = callback;
-        this.direction = direction;
-    }
-    onSwipeStart(e:TouchEvent){
-        if (!e.touches.length) return;
-        this.swipeStart = {x:e.touches[0].clientX,y:e.touches[0].clientY};
-    }
-    onSwipeEnd(e:TouchEvent){
-        if (!e.changedTouches.length || !this.swipeStart) return;
-        const swipeEnd = {x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};
-        const distance = SwipeManager.coordinateDistance(this.swipeStart,swipeEnd);
-        if (SwipeManager.checkBit(this.direction, SwipeDirection.LEFT) && distance.x < 0 && Math.abs(distance.x) >= this.minDist.x) this.callback(e);
-        if (SwipeManager.checkBit(this.direction, SwipeDirection.RIGHT) && distance.x >= 0 && Math.abs(distance.x) >= this.minDist.x) this.callback(e);
-        if (SwipeManager.checkBit(this.direction, SwipeDirection.UP) && distance.y < 0 && Math.abs(distance.y) >= this.minDist.y) this.callback(e);
-        if (SwipeManager.checkBit(this.direction, SwipeDirection.DOWN) && distance.y >= 0 && Math.abs(distance.y) >= this.minDist.y) this.callback(e);
-        this.swipeStart = null;
-    }
-    static checkBit(bit:SwipeDirection,expected:SwipeDirection){
-        return ((bit & expected) !== 0);
-    }
-    static coordinateDistance(a:Vec2,b:Vec2): Vec2{
-        return {x: b.x-a.x, y: b.y-a.y};
-    }
-    static euclideanDistance(a:Vec2,b:Vec2){
-        return Math.sqrt((b.x-a.x)**2 + (b.y-a.y)**2);
-    }
 }
