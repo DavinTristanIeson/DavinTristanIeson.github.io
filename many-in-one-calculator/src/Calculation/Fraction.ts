@@ -6,7 +6,7 @@ export class Fraction {
     constructor(numerator:number,denominator:number){
         this.numerator = numerator;
         this.denominator = denominator;
-        if (denominator == 0) throw "Fraction denominators mustn't be 0!"
+        if (denominator == 0) throw "Fraction denominators mustn't be 0!";
         this.simplify();
     }
     add(other:Fraction|number){

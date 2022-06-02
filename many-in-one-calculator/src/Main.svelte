@@ -163,9 +163,12 @@ direction = {SwipeDirection.NONE}>
             grid-template-columns: 100%;
         }
     }
-    @media screen and (max-width: 420px){
+    @media screen and (max-width: 450px){
         .snackbar {
             font-size: 1.2em;
+        }
+        #no-components {
+            font-size: 1.4em;
         }
     }
 </style>

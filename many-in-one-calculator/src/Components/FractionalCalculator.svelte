@@ -5,42 +5,29 @@
 
     const dispatch = createEventDispatcher();
     const calculator = new FractionCalculatorDisplay(new FractionCalculator(),onUpdate,onError);
-    let numeratorInput = calculator.numeratorInput,
-    denominatorInput = calculator.denominatorInput,
-    pastCalculated = calculator.pastCalculated,
-    mixedFraction = calculator.mixedFraction,
-    decimalValue = calculator.decimalValue,
-    focusedOnNumerator = calculator.focusedOnNumerator;
+    let focusedOnNumerator = true;
     function onError(message:string){
-        console.log(message);
         dispatch("alert",{
             type:"snackbar",
             message:message,
         });
     }
-    function onUpdate(updated:{
-        [key:string]:string
-    }){
-        numeratorInput = updated.numerator;
-        denominatorInput = updated.denominator;
-        pastCalculated = updated.past;
-        mixedFraction = updated.mixed;
-        decimalValue = updated.decimal;
-        focusedOnNumerator = updated.focus === 'numerator';
+    function onUpdate(focus:boolean){
+        focusedOnNumerator = focus;
     }
 </script>
 
 <article>
-    <div id="past-calculated">{pastCalculated}</div>
+    <div id="past-calculated" bind:this={calculator.pastCalculated}></div>
     <div>
-        <input type="text" class:focused = {focusedOnNumerator}
+        <input type="number" class:focused = {focusedOnNumerator}
         class="full-width"
-        bind:value = {numeratorInput} placeholder="0"
+        bind:this = {calculator.numeratorInput} placeholder="0"
         on:keydown = {(e)=>{calculator.keyboardListener(e);}}
         on:focus = {()=>{calculator.switchFocus(true)}}>
         <hr>
-        <input type="text" class="full-width" class:focused = {!focusedOnNumerator}
-        bind:value = {denominatorInput} placeholder="0"
+        <input type="number" class="full-width" class:focused = {!focusedOnNumerator}
+        bind:this = {calculator.denominatorInput} placeholder="0"
         on:keydown = {(e)=>{calculator.keyboardListener(e);}}
         on:focus = {()=>{calculator.switchFocus(false)}}>
     </div>
@@ -73,18 +60,18 @@
     <table>
         <tr>
             <th>Complete Fraction</th>
-            <td>{mixedFraction}</td>
+            <td bind:this={calculator.mixedFraction}></td>
         </tr>
         <tr>
             <th>Decimal Value</th>
-            <td>{decimalValue}</td>
+            <td bind:this={calculator.decimalValue}></td>
         </tr>
     </table>
 </article>
 
 <style>
     #past-calculated {color: var(--theme-disabled)}
-    input[type=text] {
+    input[type=number] {
         background-color: var(--theme-disabled);
         margin: 0px;
         font-size: 1.4em;
@@ -93,15 +80,15 @@
         text-align: left;
         padding: 5px;
     }
-    input[type=text].focused {background-color: var(--theme-input)}
+    input[type=number].focused {background-color: var(--theme-input)}
     hr {
         height: 2px;
         margin: 20px 0px 0px;
     }
     .calculator-grid {grid-template-columns: 1fr 1fr 1fr 1fr;}
     .calculator-grid .calc-btn {margin: 0px;}
-    @media screen and (max-width: 420px){
-        input[type=text] {
+    @media screen and (max-width: 450px){
+        input[type=number] {
             font-size: 1.2em;
         }
         .calculator-grid {

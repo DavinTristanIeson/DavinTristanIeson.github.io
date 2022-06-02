@@ -3,8 +3,7 @@
     import { BasicCalculatorDisplay } from "../Calculation/CalculatorDisplay";
     import { createEventDispatcher } from "svelte";
     
-    const calculator = new BasicCalculatorDisplay(new Calculator(),onUpdate,onError);
-    let calculatorInput = calculator.calculatorInput, pastCalculated = calculator.pastCalculated;
+    const calculator = new BasicCalculatorDisplay(new Calculator(),onError);
     const dispatch = createEventDispatcher();
     function onError(message:string){
         dispatch("alert",{
@@ -12,18 +11,12 @@
             message:message,
         });
     }
-    function onUpdate(updated:{
-        [key:string]:string
-    }){
-        calculatorInput = updated.input;
-        pastCalculated = updated.past;
-    }
 </script>
 
 <article>
-    <div id="past-calculated">{pastCalculated}</div>
-    <input type="text" id="calculator-input" class="full-width"
-    bind:value = {calculatorInput} placeholder="0"
+    <div id="past-calculated" bind:this={calculator.pastCalculated}></div>
+    <input type="number" id="calculator-input" class="full-width"
+    bind:this = {calculator.calculatorInput} placeholder="0"
     on:keydown = {(e)=>{calculator.keyboardListener(e);}}>
     <div class="calculator-grid">
         <button class="calc-btn" on:click={()=>{calculator.calculate("add")}}>+</button>
@@ -61,13 +54,13 @@
 
 <style>
     #past-calculated {color: var(--theme-disabled);}
-    input[type=text] {
+    input[type=number] {
         font-size: 1.4em;
     }
     .calculator-grid {grid-template-columns: 1fr 1fr 1fr 1fr 1fr;}
     .calculator-grid .calc-btn {margin: 0px;}
-    @media screen and (max-width: 420px){
-        input[type=text] {
+    @media screen and (max-width: 450px){
+        input[type=number] {
             font-size: 1.2em;
         }
     }

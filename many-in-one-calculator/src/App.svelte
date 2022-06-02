@@ -168,7 +168,7 @@ direction = {SwipeDirection.RIGHT}>
         overflow-y: auto;
         max-height: 500px;
 	}
-	@media screen and (max-width: 420px){
+	@media screen and (max-width: 450px){
 		:global(.input-w-btn input) {margin: 3px;}
     	:global(.input-w-btn button) {margin: 3px; font-size: 0.6em;}
 		:global(.calc-btn){ width: 55px; height: 55px;}

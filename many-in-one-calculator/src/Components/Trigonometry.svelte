@@ -129,7 +129,7 @@
     table td {padding: 10px 20px;}
     label {margin-right: 40px;}
     input {width: 100%;}
-    @media screen and (max-width: 420px){
+    @media screen and (max-width: 450px){
         label {margin-right: 10px;}
     }
     .disabled {background-color: var(--theme-disabled);}
