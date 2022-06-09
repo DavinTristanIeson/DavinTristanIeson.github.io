@@ -7,6 +7,9 @@
     import BaseConverter from "../Components/BaseConverter.svelte";
     import Backdrop from "../UI/Backdrop.svelte";
     import TruthTable from "../Components/TruthTable.svelte";
+    import MatrixCalculator from "../Components/MatrixCalculator.svelte";
+    import ModularArithmetic from "../Components/ModularArithmetic.svelte";
+    import Sequences from "../Components/Sequences.svelte";
     import { componentManager,CalculationComponent,Direction } from "../Utils";
     import { fly,scale } from "svelte/transition";
     import { bounceInOut } from "svelte/easing";
@@ -19,6 +22,9 @@
         "permutation":Permutation,
         "baseConverter":BaseConverter,
         "truthTable":TruthTable,
+        "matrixCalculator":MatrixCalculator,
+        "modularArithmetic":ModularArithmetic,
+        "sequences":Sequences,
     };
     let mountedComponents:CalculationComponent[] = [];
     let popupContents:string = "";
@@ -64,13 +70,12 @@ direction = {Direction.NONE}>
     {#each mountedComponents as component, index}     
     <div class="card" transition:scale={{delay:index*100}}>
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="details"
-        on:click={() => {popupContents = component.details;}}>
+        on:click={() => {popupContents = component.description;}}>
             <circle cx="20" cy="20" r="14" stroke="black" stroke-width="2"/>
             <line x1="20" y1="19" x2="20" y2="28" stroke="black" stroke-width="4" stroke-linecap="round"/>
             <circle class="smalldot" cx="20" cy="13" r="2" fill="black"/>
         </svg>
         <h2>{component.title}</h2>
-        <p>{component.description}</p>
         <svelte:component this={getComponentIfExist(component.source)} on:alert={parseAlert}/>
     </div>    
     {/each}

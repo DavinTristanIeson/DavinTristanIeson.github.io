@@ -11,7 +11,6 @@ export enum Direction {
 }
 export class FrontendUtils {
     static onEnter(e:KeyboardEvent,callback:()=>void){
-        console.log(e);
         if (e.key !== "Enter") return;
         e.preventDefault();
         callback();

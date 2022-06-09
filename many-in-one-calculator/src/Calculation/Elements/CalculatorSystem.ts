@@ -1,6 +1,8 @@
-import type { Fraction } from "./Fraction";
+import { Fraction } from "./Fraction";
+import { Matrix,isMatrix } from "mathjs";
+import { BackendUtils } from "../../Utils";
 
-export class CalculatorSystem<T extends number|bigint|Fraction> {
+export class CalculatorSystem<T extends number|Fraction|Matrix> {
     protected history:{operand:T, operation:string}[] = [];
     // all the supported operations
     private operations: {
@@ -54,15 +56,19 @@ export class CalculatorSystem<T extends number|bigint|Fraction> {
             return this.recent();
         }
         // enqueue a new operation if it exists, or just "" if there's none
+        const result = this.operations[this.recentOperation()]?.(this.recent(),value);
+        this.assertLessThanInfinity(result);
         this.push({
-            operand: this.operations[this.recentOperation()]?.(this.recent(),value),
+            operand: result,
             operation: nextOperation,
         });
         return this.recent();
     }
     forceOperation(value:T, operation:string):T {
         // for instantaneous operation
-        return this.operations[operation]?.(value,this.recent());
+        const result = this.operations[operation]?.(value,this.recent());
+        this.assertLessThanInfinity(result);
+        return result;
     }
     getOperationSymbol():string {
         // returns the symbol of the operation for pastCalculated
@@ -74,6 +80,20 @@ export class CalculatorSystem<T extends number|bigint|Fraction> {
     }
     // to be overwritten in child; checks whether the operation is an instant operation or not.
     isInstantOperation(operationString:string):boolean {return false;}
+    assertLessThanInfinity(result:T){
+        if (result instanceof Fraction){
+            BackendUtils.assertLessThanInfinity(result.numerator,result.denominator);
+        } else if (isMatrix(result)){
+            const sizes = result.size();
+            for (let r = 0; r < sizes[0]; r++){
+                for (let c = 0; c < sizes[1]; c++){
+                    BackendUtils.assertLessThanInfinity(result.get([r,c]));
+                }
+            }
+        } else {
+            BackendUtils.assertLessThanInfinity(result);
+        }
+    }
     static applyThousandSeparators(number:number): string {
         let returned:string[] = []
         while (number > 0){

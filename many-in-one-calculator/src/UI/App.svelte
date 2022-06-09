@@ -97,6 +97,7 @@ direction = { Direction.RIGHT }>
 		background-color: var(--theme-input);
 		color: var(--theme-dark);
 	}
+	:global(td input) {margin: 0px; width: inherit;}
 	:global(select){
 		background-color: var(--theme-input);
 		color: var(--theme-dark);
@@ -168,6 +169,72 @@ direction = { Direction.RIGHT }>
         overflow-y: auto;
         max-height: 500px;
 	}
+	/* CREDITS: https://www.w3schools.com/Css/css_dropdowns.asp */
+	:global(.dropdown) {
+        position:relative;
+        display:inline-block;
+        min-width: 80px;
+        margin: 10px;
+		border: 0.5px solid var(--theme-dark);
+		border-radius: 5px;
+		padding: 5px 10px;
+    }
+	:global(.dropdown:after){
+		content:'▼';
+		float:right;
+	}
+    :global(.dropdown-content) {
+        display:none;
+		min-width: inherit;
+        position: absolute;
+        background-color: var(--theme-light);
+        box-shadow: var(--slight-shadow);
+		border: 0.5px solid var(--theme-dark);
+		border-radius: 5px;
+        z-index: 2;
+    }
+    :global(.dropdown-content div) {
+        cursor:pointer;
+        padding: 5px 10px;
+    }
+    :global(.dropdown-content div:hover) {
+        background-color: var(--theme-highlight);
+    }
+	:global(.dropdown:hover:after){content: '◀'}
+    :global(.dropdown:hover .dropdown-content) {
+        display:block;
+    }
+	:global(input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button){
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    /* Firefox */
+    :global(input[type=number]) {
+        -moz-appearance: textfield;
+	}
+	:global(.shorter) {max-width: 80px; font-size: 1.2em;}
+	:global(.bigchar) {font-size: 1.4em;}
+	:global(p.bigchar) {margin: 0px 15px;}
+	:global(.result){
+        border: 2px solid black;
+        padding: 10px;
+        font-size: 1.2em;
+	}
+    @media screen and (max-width: 540px){
+        :global(.shorter) {
+            max-width: 60px;
+            max-height: 40px;
+            font-size: 1em;
+        }
+    }
+    @media screen and (max-width: 360px){
+        :global(.shorter) {
+            max-width: 45px;
+            max-height: 30px;
+            font-size: 0.8em;
+        }
+    }
 	@media screen and (max-width: 450px){
 		:global(.input-w-btn input) {margin: 3px;}
     	:global(.input-w-btn button) {margin: 3px; font-size: 0.6em;}

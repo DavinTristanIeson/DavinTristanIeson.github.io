@@ -77,7 +77,7 @@
                 }} bind:this={factDivInputUp}> !
             </div>
             <hr>
-            <div class="bigger">
+            <div class="bigchar">
                 <input type="number" class="shorter" min="0"
                 on:keydown={(e)=>{
                     FrontendUtils.onEnter(e,factorialDivision);
@@ -85,7 +85,7 @@
                 }} bind:this={factDivInputDown}> !
             </div>
         </div>
-        <p class="bigger">=</p>
+        <p class="bigchar">=</p>
         <div class="result">{factorialDivisionResult}</div>
     </div>
     <hr>
@@ -103,19 +103,19 @@
             }}> Repeatable</label>
     </div>
     <div class="center-v">
-        <p class="bigger">{#if permcombiSettings[0]}P{:else}C{/if}(</p>
+        <p class="bigchar">{#if permcombiSettings[0]}P{:else}C{/if}(</p>
         <input type="number" class="shorter" min="0"
         on:keydown={(e)=>{
             FrontendUtils.onEnter(e,calcPermCombi);
             FrontendUtils.onArrowChangeFocus(e,permcombiInputRight,Direction.LEFT|Direction.RIGHT);
         }} bind:this={permcombiInputLeft}>
-        <p class="bigger">,</p>
+        <p class="bigchar">,</p>
         <input type="number" class="shorter" min="0"
         on:keydown={(e)=>{
             FrontendUtils.onEnter(e,calcPermCombi);
             FrontendUtils.onArrowChangeFocus(e,permcombiInputLeft,Direction.LEFT|Direction.RIGHT);
         }} bind:this={permcombiInputRight}>
-        <p class="bigger">) =</p>
+        <p class="bigchar">) =</p>
         <div class="result">{permcombiResult}</div>
     </div>
     <div class="result full-width">{permcombiFormula}</div>
@@ -128,28 +128,6 @@
 </div>
 
 <style>
-    .bigger {font-size: 1.4em;}
-    .bigger input {font-size: 1.2em;}
-    .shorter {max-width: 80px; font-size: 1.2em;}
-    p.bigger {margin: 0px 15px;}
-    .result {
-        border: 2px solid black;
-        padding: 10px;
-        font-size: 1.2em;
-    }
+    .bigchar input {font-size: 1.2em;}
     label {margin-right: 20px;}
-    @media screen and (max-width: 540px){
-        .shorter {
-            max-width: 60px;
-            max-height: 40px;
-            font-size: 1em;
-        }
-    }
-    @media screen and (max-width: 360px){
-        .shorter {
-            max-width: 45px;
-            max-height: 30px;
-            font-size: 0.8em;
-        }
-    }
 </style>

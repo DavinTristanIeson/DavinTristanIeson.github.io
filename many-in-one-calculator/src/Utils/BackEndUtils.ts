@@ -31,9 +31,9 @@ export class UserError extends Error {
 }
 
 export class BackendUtils {
-    static assertNotNull(value:any,name:string){
-        if (value === null || value === undefined){
-            throw new DevelopmentError(`${name} is null or undefined! (${value})`);
+    static assertNotNull(name:string,...value:any[]){
+        for (let val of value){
+            if (val === null || val === undefined) throw new DevelopmentError(`${name} is null or undefined!`);
         }
     }
     static parseAsInteger(numString:string,base:number=10){
@@ -48,7 +48,7 @@ export class BackendUtils {
     }
     static assertIsntNaN(...checkIfNaN:number[]){
         for (let might of checkIfNaN){
-            if (isNaN(might)) throw new UserError("Input must be a valid number!");
+            if (isNaN(might) || (!might && might !== 0)) throw new UserError("Input must be a valid number!");
         }
         return true;
     }
@@ -60,18 +60,20 @@ export class BackendUtils {
         }
         return true;
     }
-    static assertLessThanInfinity(checkme:number){
-        if (checkme === Infinity) throw new UserError(`JavaScript numbers have a maximum limit of ${Number.MAX_VALUE}`);
+    static assertLessThanInfinity(...checkme:number[]){
+        for (let check of checkme){
+            if (check === Infinity) throw new UserError(`JavaScript numbers have a maximum limit of ${Number.MAX_VALUE}`);
+        }
     }
-    static tryCatch<T>(action:()=>T, onError:(message)=>void):T{
+    static tryCatch<T>(action:()=>T, onError:(message)=>void):T|null{
         try {
             return action();
         } catch (e){
             BackendUtils.errorHandling(e,onError);
+            return null;
         }
     }
     static errorHandling(e,onError: (message:string)=>void){
-        console.log(e);
         if (e instanceof UserError){
             onError(e.message);
         } else if (e instanceof DevelopmentError){

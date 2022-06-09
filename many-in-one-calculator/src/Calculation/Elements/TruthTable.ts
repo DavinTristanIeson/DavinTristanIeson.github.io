@@ -1,4 +1,7 @@
+import { DevelopmentError, UserError } from "../../Utils";
+
 export enum TruthOperation {
+    NONE,
     AND,
     OR,
     XOR,
@@ -9,15 +12,15 @@ export enum TruthOperation {
     FALSE
 }
 
-export const ALL_TRUTH_OPERATIONS = [
-    {"name":"AND","value":TruthOperation.AND},
-    {"name":"OR","value":TruthOperation.OR},
-    {"name":"XOR","value":TruthOperation.XOR},
-    {"name":"IMPLY","value":TruthOperation.IMPLY},
-    {"name":"BICOND","value":TruthOperation.BICOND},
-    {"name":"NOT","value":TruthOperation.NOT},
-    {"name":"TRUE","value":TruthOperation.TRUE},
-    {"name":"FALSE","value":TruthOperation.FALSE},
+export const ALL_TRUTH_OPERATIONS:[string,TruthOperation][] = [
+    ["AND",TruthOperation.AND],
+    ["OR",TruthOperation.OR],
+    ["XOR",TruthOperation.XOR],
+    ["IMPLY",TruthOperation.IMPLY],
+    ["BICOND",TruthOperation.BICOND],
+    ["NOT",TruthOperation.NOT],
+    ["TRUE",TruthOperation.TRUE],
+    ["FALSE",TruthOperation.FALSE],
 ]
 
 export class TruthColumn {
@@ -29,6 +32,9 @@ export class TruthColumn {
     }
     map(callback:(value:boolean,index:number,array:boolean[])=>boolean){
         return this.contents.map(callback);
+    }  
+    filter(callback:(value:boolean,index:number,array:boolean[])=>boolean){
+        return new TruthColumn(this.name,this.contents.filter(callback));
     }
     get(idx:number){
         return this.contents[idx];
@@ -39,10 +45,22 @@ export class TruthColumn {
     toString(){
         return `"${this.name}" : ${this.contents.toString()}`;
     }
+    get length() {
+        return this.contents.length;
+    }
+    at(index:number){
+        return this.contents[index];
+    }
 }
 
+export type TruthRowFilter = {
+    index:number,
+    state:boolean
+};
+
 export class TruthTable {
-    static VARIABLE_LIMIT = 10;
+    static VARIABLE_LIMIT = 8;
+    static VARNAME_MAXLEN = 4;
     columns:TruthColumn[] = [];
     addressBook:{
         [key:string]:number
@@ -50,10 +68,12 @@ export class TruthTable {
     rowsCount:number;
     varsCount:number;
     variables:string[];
+    filters:TruthRowFilter[] = [];
     initializeVariables(variables:string[]):void {
-        if (variables.length > TruthTable.VARIABLE_LIMIT){
-            throw `Maximum number of variables is ${TruthTable.VARIABLE_LIMIT}`
-        }
+        if (variables.length > TruthTable.VARIABLE_LIMIT) throw new UserError(`Maximum number of variables is ${TruthTable.VARIABLE_LIMIT}`);
+        variables.forEach(x => {
+            if (x.length > TruthTable.VARNAME_MAXLEN) throw new UserError(`Variable names should be under ${TruthTable.VARNAME_MAXLEN} characters long!`);
+        })
         this.varsCount = variables.length;
         this.rowsCount = 2**variables.length;
         let index = 0;
@@ -78,38 +98,52 @@ export class TruthTable {
         this.variables = variables;
         this.initializeVariables(variables);
     }
-    addColumn(method:TruthOperation,operands:string[]){
-        if (!this.assertValidVariables(...operands)) return;
+
+    get filteredColumns(){
+        let forbidden:Set<number> = new Set<number>();
+        for (let filter of this.filters){
+            const cur = this.columns[filter.index];
+            for (let i = 0; i < cur.length; i++){
+                if (cur.at(i) !== filter.state) forbidden.add(i);
+            }
+        }
+
+        return this.columns.map(col => col.filter((_,idx) => !forbidden.has(idx)));
+    }
+
+
+    addColumn(method:TruthOperation,operands:number[]){
+        this.assertValidIndexes(...operands);
         let boologicResult:boolean[], newName:string;
         switch (method){
             case TruthOperation.AND:
                 TruthTable.assertEnoughArguments(2);
-                newName = `${TruthTable.wrap(operands[0])}^${TruthTable.wrap(operands[1])}`;
+                newName = `${TruthTable.wrap(this.columns[operands[0]].name)}^${TruthTable.wrap(this.columns[operands[1]].name)}`;
                 boologicResult = this.and(operands[0],operands[1]);
                 break;
             case TruthOperation.OR:
                 TruthTable.assertEnoughArguments(2);
-                newName = `${TruthTable.wrap(operands[0])}v${TruthTable.wrap(operands[1])}`;
+                newName = `${TruthTable.wrap(this.columns[operands[0]].name)}v${TruthTable.wrap(this.columns[operands[1]].name)}`;
                 boologicResult = this.or(operands[0],operands[1]);
                 break;
             case TruthOperation.XOR:
                 TruthTable.assertEnoughArguments(2);
-                newName = `${TruthTable.wrap(operands[0])}⊕${TruthTable.wrap(operands[1])}`;
+                newName = `${TruthTable.wrap(this.columns[operands[0]].name)}⊕${TruthTable.wrap(this.columns[operands[1]].name)}`;
                 boologicResult = this.xor(operands[0],operands[1]);
                 break;
             case TruthOperation.IMPLY:
                 TruthTable.assertEnoughArguments(2);
-                newName = `${TruthTable.wrap(operands[0])}→${TruthTable.wrap(operands[1])}`;
+                newName = `${TruthTable.wrap(this.columns[operands[0]].name)}→${TruthTable.wrap(this.columns[operands[1]].name)}`;
                 boologicResult = this.imply(operands[0],operands[1]);
                 break;
             case TruthOperation.BICOND:
                 TruthTable.assertEnoughArguments(2);
-                newName = `${TruthTable.wrap(operands[0])}⟷${TruthTable.wrap(operands[1])}`;
+                newName = `${TruthTable.wrap(this.columns[operands[0]].name)}⟷${TruthTable.wrap(this.columns[operands[1]].name)}`;
                 boologicResult = this.bicond(operands[0],operands[1]);
                 break;
             case TruthOperation.NOT:
                 TruthTable.assertEnoughArguments(1);
-                newName = `¬${TruthTable.wrap(operands[0])}`;
+                newName = `¬${TruthTable.wrap(this.columns[operands[0]].name)}`;
                 boologicResult = this.not(operands[0]);
                 break;
             case TruthOperation.TRUE:
@@ -125,7 +159,9 @@ export class TruthTable {
         }
 
         if (!newName){
-            console.error("Something wrong happened. No conditions seem to be satisfied. Check the function calls from the front-end");
+            throw new DevelopmentError("Something wrong happened. No conditions seem to be satisfied. Check the function calls from the front-end");
+        } else if (newName in this.addressBook){
+            throw new UserError(`The column "${newName}" has already existed in the table!`);
         }
         this.registerColumn(newName,boologicResult);
     }
@@ -136,42 +172,27 @@ export class TruthTable {
     }
     assertValidVariables(...variables:string[]){
         for (let varname of variables){
-            if (!(varname in this.addressBook)){
-                return false;
-            }
+            if (!(varname in this.addressBook)) throw new DevelopmentError(`Variable ${varname} is not available!`);
         }
-        return true;
     }
-    addr(name:string):number {
-        return this.addressBook[name];
+    assertValidIndexes(...indexes:number[]){
+        for (let idx of indexes){
+            if (idx < 0 || idx >= this.columns.length) throw new DevelopmentError(`Index ${idx} is out of range for the available columns!`);
+        }
     }
-    and(col1:string, col2:string){
-        return this.columns[this.addr(col1)].map((val,idx)=>val && this.columns[this.addr(col2)].get(idx));
-    }
-    or(col1:string, col2:string){
-        return this.columns[this.addr(col1)].map((val,idx)=>val || this.columns[this.addr(col2)].get(idx));
-    }
-    xor(col1:string, col2:string){
-        return this.columns[this.addr(col1)].map((val,idx)=>val !== this.columns[this.addr(col2)].get(idx));
-    }
-    imply(col1:string, col2:string){
-        return this.columns[this.addr(col1)].map((val,idx)=> TruthTable.imply(val,this.columns[this.addr(col2)].get(idx),false));
-    }
-    bicond(col1:string, col2:string){
-        return this.columns[this.addr(col1)].map((val,idx)=> TruthTable.imply(val,this.columns[this.addr(col2)].get(idx),true));
-    }
-    not(col:string){
-        return this.columns[this.addr(col)].map(val => !val);
-    }
-    tautology(){
-        return Array(this.rowsCount).fill(true);
-    }
-    contradiction(){
-        return Array(this.rowsCount).fill(false);
-    }
+    addr(name:string):number {return this.addressBook[name];}
+    and(col1:number, col2:number){return this.columns[col1].map((val,idx)=>val && this.columns[col2].get(idx));}
+    or(col1:number, col2:number){return this.columns[col1].map((val,idx)=>val || this.columns[col2].get(idx));}
+    xor(col1:number, col2:number){return this.columns[col1].map((val,idx)=>val !== this.columns[col2].get(idx));}
+    imply(col1:number, col2:number){return this.columns[col1].map((val,idx)=> TruthTable.imply(val,this.columns[col2].get(idx),false));}
+    bicond(col1:number, col2:number){return this.columns[col1].map((val,idx)=> TruthTable.imply(val,this.columns[col2].get(idx),true));}
+    not(col:number){return this.columns[col].map(val => !val);}
+    tautology(){return Array(this.rowsCount).fill(true);}
+    contradiction(){return Array(this.rowsCount).fill(false);}
     clear(clearAll:boolean = false){
         this.columns = [];
         this.addressBook = {};
+        this.filters = [];
         if (!clearAll) this.initializeVariables(this.variables);
     }
     static imply(a:boolean, b:boolean, bicond:boolean):boolean {

@@ -2,9 +2,9 @@ import type { Calculator,FractionCalculator } from "../Elements/Calculator";
 import type { CalculatorSystem } from "../Elements/CalculatorSystem";
 import { Fraction } from "../Elements/Fraction";
 import { BackendUtils } from "../../Utils/BackEndUtils";
+import type { Matrix } from "mathjs";
 
-interface CalculatorDisplayI<T extends number|bigint|Fraction> {
-    onError: (message:string)=>void;
+export interface CalculatorDisplayI<T extends number|Fraction|Matrix> {
     calculator:CalculatorSystem<T>
     insert: (piece:string)=>void
     clear: (allClear:boolean)=>void
@@ -91,7 +91,6 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
                 if (operation !== "euler" && operation !== "pi") BackendUtils.assertIsntNaN(current);
                 // force operation executes the operation without saving it.
                 let result = this.calculator.forceOperation(current, operation);
-                BackendUtils.assertLessThanInfinity(result);
                 this.calculatorInput.value = result.toString();
             } else if (this.calculator.isPrepared()){
                 // if the calculator is already ready to execute operation (it already has the first operand and the queued operation)
@@ -116,7 +115,7 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
             return;
         }
         try {
-            this.assertLessThanInfinity()
+            this.assertLessThanInfinity();
         } catch (e){
             this.calculator.pop();
             BackendUtils.errorHandling(e,this.onError);
@@ -130,7 +129,6 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
             this.vulnerableInput = true
             return;
         }
-        console.log(this.calculatorInput.value,"-",this.pastCalculated.textContent);
         this.pastCalculated.textContent = this.calculator.getOperationQueue();
         if (!isInstant) this.clear();
     }
