@@ -11,4 +11,4 @@ I used Svelte in the making of this project because I enjoy its considerable lig
 **(01/06/2022)**
 This project was started out of annoyance of having to open many tabs of online calculation websites and calculator applications. I'll update this project from time to time whenever I need any additional tools.
 
-Current tools included: basic calculator, fraction calculator, factors (isPrime, factorization, GCD, LCM), basic trigonometry, permutation/combination, and number-base converter.
+Current tools included: basic calculator, fraction calculator, factors (isPrime, factorization, GCD, LCM), basic trigonometry, permutation/combination, number-base converter, truth table, matrix calculator, modular arithmetic, sequences, and expression parser.
