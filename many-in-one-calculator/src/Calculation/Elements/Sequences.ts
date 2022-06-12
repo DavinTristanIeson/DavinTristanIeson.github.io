@@ -1,5 +1,4 @@
 import { useWorker } from "../../Utils";
-import { combination } from "./Permutation";
 
 export function fibonacci(length:number){
     return useWorker<number,number[]>("fibonacci",length);

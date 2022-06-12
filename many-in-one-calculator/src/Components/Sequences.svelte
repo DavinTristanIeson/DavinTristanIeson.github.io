@@ -2,6 +2,7 @@
     import * as seq from "../Calculation/Elements/Sequences";
     import { BackendUtils, Direction, FrontendUtils } from "../Utils";
     import { createEventDispatcher } from "svelte";
+    import TableInputs from "../UI/TableInputs.svelte";
     const dispatch = createEventDispatcher();
     function onError(message:string){
         dispatch("alert",{
@@ -10,7 +11,6 @@
         });
     }
 
-    let pascalTriangleInputs:[HTMLInputElement,HTMLInputElement] = [null,null];
     let pascalTriangleParams:[number|null,number|null] = [null,null];
     let pascalTriangleResult:string = "";
     function pascalTriangle(){
@@ -64,7 +64,6 @@
     let geometricResult:[string,string] = ["",""];
     function geometricSum(){
         if (!BackendUtils.tryCatch(()=>BackendUtils.assertIsntNaN(...geometricParams),onError)) return;
-        console.log(geometricParams);
         if (isSumMode){
             const finiteResult = seq.geometricSum(geometricParams[0],geometricParams[1],geometricParams[2]).toString();
             let infiniteResult = "None";
@@ -86,24 +85,7 @@
 
 <h3>Sequence Generator</h3>
 <h4>Pascal's Triangle</h4>
-<table>
-    <tr>
-        <th>From</th>
-        <td><input type="number" bind:this={pascalTriangleInputs[0]} bind:value={pascalTriangleParams[0]}
-            on:keydown={(e)=>{
-                FrontendUtils.onEnter(e,pascalTriangle);
-                FrontendUtils.onArrowChangeFocus(e,pascalTriangleInputs[1],Direction.DOWN|Direction.UP);
-            }}></td>
-    </tr>
-    <tr>
-        <th>To</th>
-        <td><input type="number" bind:this={pascalTriangleInputs[1]} bind:value={pascalTriangleParams[1]}
-            on:keydown={(e)=>{
-                FrontendUtils.onEnter(e,pascalTriangle);
-                FrontendUtils.onArrowChangeFocus(e,pascalTriangleInputs[0],Direction.DOWN|Direction.UP);
-            }}></td>
-    </tr>
-</table>
+<TableInputs inputs={["From","To"]} bind:value={pascalTriangleParams} action={pascalTriangle}/>
 <div class="result max-500-y">{pascalTriangleResult}</div>
 
 <h4>Fibonacci</h4>
@@ -122,7 +104,7 @@
 {#if isSumMode}
 <label><input type="checkbox" bind:checked={lastItemGiven}> Last Item Given</label>
 {/if}
-<table>
+<table class="full-width">
     <tr>
         <th>From</th>
         <td><input type="number" bind:value={arithmeticParams[0]} bind:this={arithmeticInputs[0]}
@@ -169,7 +151,7 @@
 </table>
 
 <h4>Geometric {modeName}</h4>
-<table>
+<table class="full-width">
     <tr>
         <th>From</th>
         <td><input type="number" bind:value={geometricParams[0]} bind:this={geometricInputs[0]}

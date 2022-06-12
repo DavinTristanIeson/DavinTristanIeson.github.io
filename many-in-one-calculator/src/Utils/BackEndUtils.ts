@@ -36,6 +36,11 @@ export class BackendUtils {
             if (val === null || val === undefined) throw new DevelopmentError(`${name} is null or undefined!`);
         }
     }
+    static assertNotEmpty(...containers:(string|any[])[]){
+        for (let container of containers){
+            if (container?.length === 0) throw new UserError("Input must not be empty!");
+        }
+    }
     static parseAsInteger(numString:string,base:number=10){
         let result = parseInt(numString,base);
         BackendUtils.assertIsntNaN(result);

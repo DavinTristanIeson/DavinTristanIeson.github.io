@@ -1,22 +1,21 @@
 <script type="ts">
     import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
     export let contents:[string,any][];
     export let visible = true;
 
-    const dispatch = createEventDispatcher();
     let yesNoStates: boolean[] = new Array(contents.length).fill(false);
-    let selected:[string,any][] = [];
-    function setAsSelected(name,value,index){
-        if (yesNoStates[value]) selected = selected.filter(x => x[1] !== value);
+    export let selected:any[] = [];
+    $: selectedNames = contents.filter(x => selected.includes(x[1])).map(x => x[0]);
+    function select(value,index){
+        if (yesNoStates[index]) selected = selected.filter(x => x !== value);
         else {
-            selected.push([name,value]);
+            selected.push(value);
             selected = selected;
         }
         yesNoStates[index] = !yesNoStates[index];
-        console.log(selected,yesNoStates);
         dispatch("selected",{
-            "name": selected.map(x => x[0]),
-            "value": selected.map(x => x[1]),
+            value,index
         });
     }
     export function reload(){
@@ -27,12 +26,12 @@
 
 {#if visible}
 <div class="dropdown">
-    <span>{selected.map(x=>x[0]).join(", ")}</span>
+    <span>{selectedNames.join(", ")}</span>
     {#if contents.length > 0}
     <div class="dropdown-content">
         {#each contents as content,idx}
         <div data-value="{content[1]}"
-        on:click={()=>{setAsSelected(content[0],content[1],idx)}}
+        on:click={()=>{select(content[1],idx)}}
         >{content[0]}</div>
         {/each}
     </div>

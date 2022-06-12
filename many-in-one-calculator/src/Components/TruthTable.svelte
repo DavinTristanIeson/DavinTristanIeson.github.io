@@ -1,10 +1,11 @@
 <script type="ts">
-    import { TruthTable,ALL_TRUTH_OPERATIONS } from "../Calculation/Elements/TruthTable";
-    import { createEventDispatcher } from "svelte";
+    import { TruthTable,ALL_TRUTH_OPERATIONS, TruthOperation } from "../Calculation/Elements/TruthTable";
+    import { createEventDispatcher,onDestroy } from "svelte";
     import { TruthTableDisplay } from "../Calculation/Displays/TruthTableDisplay";
     import { FrontendUtils } from "../Utils/FrontEndUtils";
     import Dropdown from "../UI/Dropdown.svelte";
     import MultipleDropdown from "../UI/MultipleDropdown.svelte";
+    import { useMediaQuery } from "../Utils";
     const dispatch = createEventDispatcher();
 
 
@@ -23,18 +24,19 @@
             message:message,
         });
     }
-    function changeOperandVisibility(e:CustomEvent<{name:string,value:number}>){
-        const comparer = e.detail.name;
-        if (comparer === "TRUE" || comparer === "FALSE"){
-            visibleOperands = [false,false];
-        } else if (comparer === "NOT"){
-            visibleOperands = [true,false];
-        }
+    function changeOperandVisibility(e:CustomEvent<{value:TruthOperation,index:number}>){
+        const comparer = e.detail.value;
+        if (comparer === TruthOperation.TRUE || comparer === TruthOperation.FALSE) visibleOperands = [false,false];
+        else if (comparer === TruthOperation.NOT) visibleOperands = [true,false];
+        else visibleOperands = [true,true];
         truthTable.operation = e.detail.value;
     }
     function resetAll(){
         for (let child of childrenComponent) child?.reload?.();
     }
+    let isSmallScreen:boolean = false;
+    const unsubscriber = useMediaQuery("screen and (max-width: 420px)").subscribe(data => {isSmallScreen = data});
+    onDestroy(unsubscriber);
 </script>
 
 <div>
@@ -46,12 +48,13 @@
         <button on:click={()=>{truthTable.registerVariables()}}>Register Variables</button>
     </div>
     <div class="center-h full-width">
-        <div class="center-v">
-            <Dropdown bind:this={childrenComponent[0]} contents={Object.entries(table.addressBook)} visible={visibleOperands[0]}
-            on:selected={(e)=>{truthTable.operand1 = e.detail.value ?? -1;}}/>
-            <Dropdown bind:this={childrenComponent[1]} contents={ALL_TRUTH_OPERATIONS} on:selected={(e)=>changeOperandVisibility(e)}/>
-            <Dropdown bind:this={childrenComponent[2]} contents={Object.entries(table.addressBook)} visible={visibleOperands[1]}
-            on:selected={(e)=>{truthTable.operand2 = e.detail.value ?? -1;}}/>
+        <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen}>
+            <Dropdown bind:this={childrenComponent[0]} contents={Object.entries(table.addressBook)} bind:visible={visibleOperands[0]}
+            bind:selected={truthTable.operand1}/>
+            <Dropdown bind:this={childrenComponent[1]} contents={ALL_TRUTH_OPERATIONS} on:selected={(e)=>changeOperandVisibility(e)}
+                bind:selected={truthTable.operation}/>
+            <Dropdown bind:this={childrenComponent[2]} contents={Object.entries(table.addressBook)} bind:visible={visibleOperands[1]}
+            bind:selected={truthTable.operand2}/>
         </div>
         <button class="full-width"
         on:click={()=>{truthTable.addColumn();}}>Add Column</button>
@@ -60,10 +63,10 @@
         <div class="full-width" id="filter">
             <div class="center-v">
                 WHERE<MultipleDropdown bind:this={childrenComponent[4]} contents={Object.entries(table.addressBook)}
-                on:selected={(e)=>{truthTable.whereIsTrue = e.detail.value}}/>is TRUE
+                bind:selected={truthTable.whereIsTrue}/>is TRUE
             </div> AND <div class="center-v">
                 WHERE<MultipleDropdown bind:this={childrenComponent[5]} contents={Object.entries(table.addressBook)}
-                on:selected={(e)=>{truthTable.whereIsFalse = e.detail.value}}/>is FALSE
+                bind:selected={truthTable.whereIsFalse}/>is FALSE
             </div>
         </div>
         <button class="full-width" on:click={()=>truthTable.setFilter()}>Filter</button>
@@ -106,6 +109,7 @@
         flex-direction: row;
         align-items: center;
     }
+    #filter div {margin: 0px 10px;}
     @media screen and (max-width: 450px){
         #filter {
             flex-direction: column;

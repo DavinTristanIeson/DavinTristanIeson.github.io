@@ -10,6 +10,7 @@
     import MatrixCalculator from "../Components/MatrixCalculator.svelte";
     import ModularArithmetic from "../Components/ModularArithmetic.svelte";
     import Sequences from "../Components/Sequences.svelte";
+    import ExpressionParser from "../Components/ExpressionParser.svelte";
     import { componentManager,CalculationComponent,Direction } from "../Utils";
     import { fly,scale } from "svelte/transition";
     import { bounceInOut } from "svelte/easing";
@@ -25,6 +26,7 @@
         "matrixCalculator":MatrixCalculator,
         "modularArithmetic":ModularArithmetic,
         "sequences":Sequences,
+        "expressionParser":ExpressionParser
     };
     let mountedComponents:CalculationComponent[] = [];
     let popupContents:string = "";
@@ -102,10 +104,13 @@ direction = {Direction.NONE}>
         box-shadow: var(--slight-shadow);
         margin: 20px;
         padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        white-space: pre-wrap;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* align-items: center; */
+        /* white-space: pre-wrap; */
+        /* Using text-align rather than flex to deal with the horizontal
+        scrolling problem */
+        text-align:center;
         overflow-x: auto;
         background-color: var(--theme-light);
         z-index: 0;
@@ -123,6 +128,7 @@ direction = {Direction.NONE}>
         max-height: 80vh;
         z-index: 25;
         overflow-y: auto;
+        white-space: pre-wrap;
     }
     h2 {color: var(--theme-dark);
     padding: 0; margin:0;}
@@ -148,7 +154,7 @@ direction = {Direction.NONE}>
         transform: translate(-50%,-50%);
         /* So it doesn't appear over the modals */
         z-index: -100;
-        color: var(--theme-disabled);
+        color: var(--theme-separator);
         text-align: center;
         font-size: 2em;
         font-weight: bold;

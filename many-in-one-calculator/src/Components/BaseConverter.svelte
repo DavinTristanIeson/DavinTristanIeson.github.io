@@ -1,8 +1,9 @@
 <script type="ts">
     import { createEventDispatcher } from "svelte";
     import { FrontendUtils,useMediaQuery } from "../Utils";
-    import { Converter,UpdatePayload } from "../Calculation/Elements/BaseConversion";
+    import { Converter,BaseConverterUpdatePayload } from "../Calculation/Elements/BaseConversion";
     import { onDestroy } from "svelte/internal";
+    import Dropdown from "../UI/Dropdown.svelte";
     const dispatch = createEventDispatcher();
     function onError(message:string){
         dispatch("alert",{
@@ -10,35 +11,26 @@
             message:message,
         });
     }
-    const converter = new Converter(onUpdate,onError);
-    let inputs:[HTMLInputElement,HTMLInputElement] = [null, null];
-    let selects:[HTMLSelectElement,HTMLSelectElement] = [null, null];
-    let isTwoComplement:boolean = converter.isTwoComplement;
-    function onUpdate(updated:UpdatePayload){
-        inputs[0].value = updated.from;
-        inputs[1].value = updated.to;
-        selects[0].selectedIndex = updated.fromIndex;
-        selects[1].selectedIndex = updated.toIndex;
+
+    const conversionOptions:[string,any][] = [["Binary","binary"],["Octal","octal"],["Decimal","decimal"],["Hexadecimal","hexadecimal"]];
+    const converter = new Converter((e:BaseConverterUpdatePayload)=>{},onError);
+
+    function swap(){
+        const temp = converter.fromType;
+        converter.fromType = converter.toType;
+        converter.toType = temp;
+        const convTemp = converter.from;
+        converter.from = converter.to;
+        converter.to = convTemp;
     }
     function onAltKey(e:KeyboardEvent){
         if (e.key === 'Alt'){
             e.preventDefault();
-            bringUpToDate();
-            converter.swap();
+            swap();
         }
     }
-    function bringUpToDate(){
-        converter.update({
-            fromType: selects[0].selectedIndex,
-            toType: selects[1].selectedIndex,
-            from: inputs[0].value,
-            to: inputs[1].value,
-            isTwoComplement: isTwoComplement
-        });
-    }
     function convert(sideEffect:boolean){
-        if (sideEffect && !inputs[0].value) return;
-        bringUpToDate();
+        if (sideEffect && !converter.from) return;
         converter.convert();
     }
     let isSmallScreen:boolean = false;
@@ -48,28 +40,21 @@
 
 <div class="center-h">
     <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen} id="select-types">
-        <select bind:this={selects[0]} on:change={()=>{convert(true)}}>
-            <option value="binary">Binary</option>
-            <option value="octal">Octal</option>
-            <option value="decimal" selected>Decimal</option>
-            <option value="hexadecimal">Hexadecimal</option>
-        </select>
-        <label><input type="checkbox" bind:checked={isTwoComplement} on:click={()=>{convert(true)}}> Two's Complement</label>
-        <select bind:this={selects[1]} on:change={()=>{convert(true)}}>
-            <option value="binary">Binary</option>
-            <option value="octal">Octal</option>
-            <option value="decimal" selected>Decimal</option>
-            <option value="hexadecimal">Hexadecimal</option>
-        </select>
+        <Dropdown contents={conversionOptions} bind:selected={converter.fromType}
+            on:selected={(e)=>{convert(true)}}
+        />
+        <label><input type="checkbox" bind:checked={converter.isTwoComplement} on:click={()=>{convert(true)}}> Two's Complement</label>
+        <Dropdown contents={conversionOptions} bind:selected={converter.toType}
+        on:selected={(e)=>{convert(true)}}/>
     </div>
     <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen}>
-        <input type="text" bind:this={inputs[0]}
+        <input type="text" bind:value={converter.from}
         on:keydown = {(e)=>{
             FrontendUtils.onEnter(e,()=>{convert(false)});
             onAltKey(e);
         }}>
-        <button on:click={()=>{bringUpToDate(); converter.swap()}}>&#8646;</button>
-        <input type="text" bind:this={inputs[1]} disabled>
+        <button on:click={()=>{swap()}}>&#8646;</button>
+        <input type="text" bind:value={converter.to} disabled>
     </div>
     <button class="full-width" on:click={()=>{convert(false)}}>Convert</button>
 </div>
@@ -78,13 +63,8 @@
     #select-types {
         margin-bottom: 20px;
     }
-    .center-v select {margin: 0px 30px;}
     button {padding: 10px 20px;}
     label {font-size: 0.8em;}
     .center-v input {width: 45%;}
     .center-h input {width: 100%;}
-    input:disabled {
-        background-color: var(--theme-input);
-        color: var(--theme-dark);
-    }
 </style>

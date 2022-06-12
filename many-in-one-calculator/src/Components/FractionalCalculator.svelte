@@ -70,7 +70,11 @@
 </article>
 
 <style>
-    #past-calculated {color: var(--theme-disabled)}
+    #past-calculated {
+        color: var(--theme-separator);
+        text-align: left;
+        margin-top: 20px;
+    }
     input[type=number] {
         background-color: var(--theme-disabled);
         margin: 0px;
@@ -83,10 +87,12 @@
     input[type=number].focused {background-color: var(--theme-input)}
     hr {
         height: 2px;
-        margin: 20px 0px 0px;
+        margin: 20px 0px;
     }
-    .calculator-grid {grid-template-columns: 1fr 1fr 1fr 1fr;}
-    .calculator-grid .calc-btn {margin: 0px;}
+    .calculator-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        margin: 20px 0px;
+    }
     @media screen and (max-width: 450px){
         input[type=number] {
             font-size: 1.2em;

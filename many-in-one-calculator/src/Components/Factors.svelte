@@ -30,7 +30,7 @@
     }
     function checkPrime(){
         let input = BackendUtils.tryCatch<number>(()=>BackendUtils.parseAsFloat(primeInput.value),onError);
-        primeInput.style.backgroundColor = "var(--theme-disabled)";
+        primeInput.style.backgroundColor = "var(--theme-input)";
         isPrime(input).then(boolean => {
             if (boolean){
                 primeInput.style.backgroundColor = "var(--theme-main)";
@@ -48,7 +48,6 @@
         } catch (e){
             onError(e);
         }
-        console.log(numbers,gcdOutput,lcmOutput);
     }
 </script>
 

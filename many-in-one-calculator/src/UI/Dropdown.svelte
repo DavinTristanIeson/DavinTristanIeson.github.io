@@ -1,17 +1,14 @@
 <script type="ts">
     import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
     export let contents:[string,any][];
     export let visible = true;
-
-    const dispatch = createEventDispatcher();
-    let selected:[string,any] = ["None",null];
-    // let selected:[string,any] = ["None",null];
-    function setAsSelected(name,value){
-        selected[0] = name;
-        selected[1] = value;
+    export let selected:any = null;
+    $: selectedName = contents.find(x => x[1] == selected)?.[0] ?? "None";
+    function select(value:any,index:number){
+        selected = value;
         dispatch("selected",{
-            name: selected[0],
-            value: selected[1]
+            value,index
         });
     }
     export function reload(){
@@ -21,13 +18,12 @@
 
 {#if visible}
 <div class="dropdown">
-    <span>{selected[0]}</span>
+    <span>{selectedName}</span>
     {#if contents.length > 0}
     <div class="dropdown-content">
-        {#each contents as content}
+        {#each contents as content,idx}
         <div data-value="{content[1]}"
-        on:click={()=>{setAsSelected(content[0],content[1])}}
-        >{content[0]}</div>
+        on:click={()=>{select(content[1],idx)}}>{content[0]}</div>
         {/each}
     </div>
     {/if}

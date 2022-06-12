@@ -69,7 +69,7 @@
     <h3>Factorial Division</h3>
     <div class="center-v">
         <div class="center-h">
-            <div class="bigger">
+            <div class="bigchar">
                 <input type="number" class="shorter" min="0"
                 on:keydown={(e)=>{
                     FrontendUtils.onEnter(e,factorialDivision);

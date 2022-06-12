@@ -9,7 +9,7 @@ export class TruthTableDisplay implements DisplayBackend<TruthTable> {
     variableInput:HTMLInputElement;
     operand1:number = -1;
     operand2:number = -1;
-    operation:TruthOperation = TruthOperation.AND;
+    operation:TruthOperation = TruthOperation.NONE;
     whereIsTrue:number[] = [];
     whereIsFalse:number[] = [];
     constructor(truthTable:TruthTable,onUpdate:(truthTable:TruthTable)=>void,onError:(message:string)=>void){

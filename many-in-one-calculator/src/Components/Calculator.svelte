@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Calculator } from "../Calculation/Elements";
-    import { BasicCalculatorDisplay } from "../Calculation/Displays";
+    import { Calculator } from "../Calculation/Elements/Calculator";
+    import { BasicCalculatorDisplay } from "../Calculation/Displays/CalculatorDisplay";
     import { createEventDispatcher } from "svelte";
     
     const calculator = new BasicCalculatorDisplay(new Calculator(),onError);
@@ -53,12 +53,18 @@
 </article>
 
 <style>
-    #past-calculated {color: var(--theme-disabled);}
+    #past-calculated {
+        color: var(--theme-separator);
+        text-align: left;
+        margin-top: 20px;
+    }
     input[type=number] {
         font-size: 1.4em;
     }
-    .calculator-grid {grid-template-columns: 1fr 1fr 1fr 1fr 1fr;}
-    .calculator-grid .calc-btn {margin: 0px;}
+    .calculator-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        margin-top: 20px;
+    }
     @media screen and (max-width: 450px){
         input[type=number] {
             font-size: 1.2em;

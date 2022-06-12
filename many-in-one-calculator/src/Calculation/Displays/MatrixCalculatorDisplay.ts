@@ -1,5 +1,5 @@
 import { Matrix, subtract } from "mathjs";
-import { add, multiply, inv, transpose,det,matrix,zeros } from "mathjs";
+import { add, multiply, inv, transpose,det,matrix } from "mathjs";
 import { BackendUtils, DisplayBackend, UserError } from "../../Utils";
 import { CalculatorSystem } from "../Elements/CalculatorSystem";
 import type { CalculatorDisplayI } from "./CalculatorDisplay";
@@ -111,7 +111,6 @@ export class MatrixCalculatorDisplay implements CalculatorDisplayI<Matrix>,Displ
         let isInstant = this.calculator.isInstantOperation(operation);
         try {
             let current = this.array2DtoMatrix(this.calculatorInput);
-            console.log(current,this.calculatorInput);
             if (isInstant){
                 this.calculatorInput = this.matrixToArray2D(this.calculator.forceOperation(current,operation));
             } else if (this.calculator.isPrepared()){
@@ -195,7 +194,6 @@ export class MatrixCalculatorDisplay implements CalculatorDisplayI<Matrix>,Displ
                 matproto[r].push(array2d[r][c]);
             }
         }
-        console.log(matproto);
         return matrix(matproto);
     }
     stringToMatrix(stringified:string[][]):Matrix{
@@ -206,7 +204,6 @@ export class MatrixCalculatorDisplay implements CalculatorDisplayI<Matrix>,Displ
             }
         }
         let arr2d:number[][] = [];
-        console.log(limits,stringified);
         for (let r = 0; r <= limits[0]; r++){
             arr2d.push([]);
             for (let c = 0; c <= limits[1]; c++){

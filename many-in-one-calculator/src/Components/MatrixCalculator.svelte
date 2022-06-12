@@ -104,8 +104,8 @@
 
 <style>
     .mat-input {
-        width: inherit;
-        height: inherit;
+        width: 100%;
+        height: 100%;
         font-size: 1em;
         border: none;
         margin: 0px;
@@ -113,14 +113,12 @@
         text-overflow: ellipsis;
     }
     .matrix td {
-        width: 70px;
-        height: 50px;
+        min-width: 50px;
         max-width: 70px;
-        max-height: 50px;
+        height: 50px;
         overflow-x: auto;
         font-size: 1em;
         text-align: center;
-        padding: 5px;
     }
     #operation {
         font-weight: bold;
@@ -131,8 +129,8 @@
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     }
     .faded td {
-        border: 1px solid var(--theme-disabled);
-        color: var(--theme-disabled);
+        border: 1px solid var(--theme-separator);
+        color: var(--theme-separator);
     }
 </style>
 

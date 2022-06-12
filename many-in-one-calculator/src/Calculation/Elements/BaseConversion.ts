@@ -1,59 +1,41 @@
 import { DisplayBackend, BackendUtils, UserError } from "../../Utils/BackEndUtils";
 
-export type UpdatePayload = {
+export type BaseConverterUpdatePayload = {
     from:string,
     to:string,
-    fromIndex:number,
-    toIndex:number
+    fromType:string,
+    toType:string,
+    isTwoComplement:boolean
 }
-export class Converter implements DisplayBackend<UpdatePayload> {
-    from:string = "";
-    to:string = "";
-    fromType:number = 2;
-    toType:number = 2;
+export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
+    from:string;
+    to:string;
+    fromType:string = "decimal";
+    toType:string = "decimal";
     isTwoComplement:boolean = false;
-    static readonly TYPES = ["Binary","Octal","Decimal","Hexadecimal"]
+    static readonly TYPES = ["binary","octal","decimal","hexadecimal"]
     static readonly BASES = [2,8,10,16];
     static readonly BITSTEPS = [2**8,2**16,2**32,2**64];
     private static readonly ERROR_MESSAGES = ["Binary strings must only use 1s or 0s!","Octal numbers should only have digits between 0-7!","Decimal numbers should only digits between 0-9!","Hexadecimal numbers should only contain digits from 0-9 or characters between a-f!"];
-    onUpdate: (updated: UpdatePayload) => void;
+    onUpdate: (updated: BaseConverterUpdatePayload) => void;
     onError: (message: string) => void;
-    constructor(onUpdate:(updated: UpdatePayload) => void,onError:(message:string)=>void){
+    constructor(onUpdate:(updated: BaseConverterUpdatePayload) => void,onError:(message:string)=>void){
         this.onUpdate = onUpdate;
         this.onError = onError;
     }
-    render(){
-        this.onUpdate({
-            from: this.from,
-            to: this.to,
-            fromIndex: this.fromType,
-            toIndex: this.toType,
-        });
-    }
     swap(){
-        let temp = this.to, tempType = this.toType;
-        this.to = this.from; this.from = temp;
-        this.toType = this.fromType; this.fromType = tempType;
-        this.render();
+        const temp = this.from;
+        this.from = this.to;
+        this.to = temp;
     }
-    update(updated:{
-        toType:number,
-        fromType:number,
-        to:string,
-        from:string,
-        isTwoComplement:boolean
-    }){
-        this.toType = updated.toType;
-        this.fromType = updated.fromType;
-        this.from = updated.from;
-        this.to = updated.to;
-        this.isTwoComplement = updated.isTwoComplement;
+    indexOfType(type:string){
+        return Converter.TYPES.indexOf(type);
     }
     convert(){
         let temp;
         try {
-            temp = parseInt(this.from,Converter.BASES[this.fromType]);
-            if (isNaN(temp)) throw new UserError(Converter.ERROR_MESSAGES[this.fromType]);
+            temp = parseInt(this.from,Converter.BASES[this.indexOfType(this.fromType)]);
+            if (isNaN(temp)) throw new UserError(Converter.ERROR_MESSAGES[this.indexOfType(this.fromType)]);
         } catch (e){
             BackendUtils.errorHandling(e,this.onError);
             return;
@@ -73,7 +55,6 @@ export class Converter implements DisplayBackend<UpdatePayload> {
             }
             temp = subtracter - temp;
         }
-        this.to = temp.toString(Converter.BASES[this.toType]);
-        this.render();
+        this.to = temp.toString(Converter.BASES[this.indexOfType(this.toType)]);
     }
 }

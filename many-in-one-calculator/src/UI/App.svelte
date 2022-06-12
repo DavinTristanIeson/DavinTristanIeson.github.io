@@ -52,6 +52,7 @@ direction = { Direction.RIGHT }>
 		--theme-dark: #0a3508;
 		--theme-light: #ffffff;
 		--theme-input: #ffffff;
+		--theme-separator: #aaa;
 		--slight-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 		--theme-disabled: #aaaaaa;
 		--theme-error: rgb(221, 42, 42);
@@ -60,49 +61,58 @@ direction = { Direction.RIGHT }>
 	@media (prefers-color-scheme:dark){
 		:global(:root){
 			--theme-highlight: #4da84c;
-			--theme-main: #1d771b;
-			--theme-dim: #0c3309;
-			--theme-dark: #cccccc;
+			--theme-main: #076d46;
+			--theme-dim: #074229;
+			--theme-dark: #bbb;
 			--theme-light: #3d423d;
-			--theme-input: #3d523d;
+			--theme-input: #bbb;
+			--theme-separator: #888;
 			--slight-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-			--theme-disabled: #888;
+			--theme-disabled: #444a44;
 			--theme-error: rgb(221, 42, 42);
 			--theme-snackbar: rgb(145, 158, 147);
 		}
+		:global(hr){background-color: var(--theme-dark);}
 	}
 	:global(body){
 		padding:0;
 		color: var(--theme-dark);
 		background-color: var(--theme-light);
 	}
-	:global(table){border-collapse: collapse;}
+	:global(table){
+		border-collapse: collapse;
+		margin: 10px 0px;
+	}
 	:global(table td, table th){
 		border: 2px solid black;
 		text-align: center;
 	}
-	:global(table th){background-color: var(--theme-main);}
+	:global(table td){color: var(--theme-dark);}
+	:global(table th){background-color: var(--theme-main); color:black;}
 	:global(hr) {
-		background-color: var(--theme-disabled);
+		background-color: var(--theme-separator);
 		border:none; outline:none;
 		width: 100%;
         height: 2px;
+	}
+	:global(td input) {
+		margin: 0px;
+		width: 100%;
+		border-radius: 0px !important;
+		box-shadow: none !important;
 	}
 	:global(input:not([type=submit],[type=button],[type=radio],[type=checkbox])){
         padding: 10px;
         font-size: 1.2em;
 		/* https://stackoverflow.com/questions/42421361/input-button-elements-not-shrinking-in-a-flex-container */
 		min-width: 0px;
-		border: 1px solid var(--theme-dim);
-		background-color: var(--theme-input);
-		color: var(--theme-dark);
-	}
-	:global(td input) {margin: 0px; width: inherit;}
-	:global(select){
-		background-color: var(--theme-input);
-		color: var(--theme-dark);
 		border: none;
+		border-radius: 5px;
+		background-color: var(--theme-input);
+		color: black;
+		box-shadow: var(--slight-shadow);
 	}
+	:global(input:disabled){background-color: var(--theme-disabled); color: var(--theme-dark)}
 	:global(input[type="checkbox"]){
 		width: 16px;
 		height: 16px;
@@ -145,13 +155,14 @@ direction = { Direction.RIGHT }>
 		display:grid;
 		grid-template-columns: 50% 50%;
 	}
-	:global(.input-w-btn input) {margin: 5px 10px;}
+	:global(.input-w-btn input) {margin: 5px 10px; min-width: 0px;}
     :global(.input-w-btn button) {margin: 5px 10px; background-color: var(--theme-main);}
 	:global(.full-width){width: 100%;}
 	:global(button){
         background-color: var(--theme-main);
         border-radius: 5px;
 		border: none;
+		color: black;
 		box-shadow: var(--slight-shadow);
 		margin: 5px;
 	}
@@ -221,6 +232,8 @@ direction = { Direction.RIGHT }>
         padding: 10px;
         font-size: 1.2em;
 	}
+	/* lazy fix for .result overflowing */
+	:global(.full-width.result){width: 95%}
     @media screen and (max-width: 540px){
         :global(.shorter) {
             max-width: 60px;
