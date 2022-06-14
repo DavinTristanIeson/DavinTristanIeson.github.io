@@ -35,5 +35,7 @@
         font-size: 2em;
         box-sizing: border-box;
         padding: 0.4em;
+        max-height: 90vh;
+        resize: none;
     }
 </style>

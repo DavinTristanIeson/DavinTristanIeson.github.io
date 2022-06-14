@@ -29,3 +29,9 @@
     {/if}
 </div>
 {/if}
+
+<style>
+    .dropdown {
+        text-align: left;
+    }
+</style>

@@ -1,7 +1,7 @@
-import { BackendUtils, DisplayBackend,UserError } from "../../Utils/BackEndUtils";
+import { BackendUtils, DisplayError ,UserError } from "../../Utils/BackEndUtils";
 import { TruthTable,TruthColumn, TruthRowFilter, TruthOperation } from "../Elements/TruthTable";
 
-export class TruthTableDisplay implements DisplayBackend<TruthTable> {
+export class TruthTableDisplay implements DisplayError {
     truthTable: TruthTable;
     tableElement: HTMLTableElement = null;
     onUpdate: (updated: TruthTable) => void;

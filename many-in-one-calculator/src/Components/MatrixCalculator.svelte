@@ -112,7 +112,7 @@
         padding: 0px 5px;
         text-overflow: ellipsis;
     }
-    .matrix td {
+    td {
         min-width: 50px;
         max-width: 70px;
         height: 50px;

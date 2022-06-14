@@ -87,7 +87,14 @@ Note that large quantities of sequence generation will put a burden on your brow
         new CalculationComponent("Expression Parser",
 `This parser uses the functionality of https://mathjs.org/.
 It can evaluate a function with the given variables, or even simplify, derive, and rationalize expressions.
-For derivatives, you need to provide the variable to be derived (d/d{})`)
+For derivatives, you need to provide the variable to be derived (d/d{})`),
+        new CalculationComponent("Graph Representation",
+`Converts between various representations of graph, such as adjacency lists, adjacency matrices, and edge lists.
+This component also handles the analysis of the graph and produces a report including whether the graph has cycles in them, is bipartite, is connected, and also generates its in-degrees, out-degrees, and eulerian path if it exists.
+Note that the graphs are treated as directed by default.`),
+        new CalculationComponent("Djikstra",
+`Executes Djikstra's algorithm on the provided weighted, directed adjacency list and produces a table containing all the paths and their respective length.
+Note that Djikstra's algorithm doesn't perform as expected for graphs with negative values.`)
     ];
     static STORAGE_NAME = "components";
     constructor(){
@@ -125,7 +132,12 @@ For derivatives, you need to provide the variable to be derived (d/d{})`)
     resetComponents(){
         this.selected.set([]);
         this.unselected.set(CalculationComponentManager.ALL_COMPONENTS);
-        localStorage.setItem(CalculationComponentManager.STORAGE_NAME,"[]");
+        this.saveComponents();
+    }
+    selectAllComponents(){
+        this.selected.set([...CalculationComponentManager.ALL_COMPONENTS]);
+        this.unselected.set([]);
+        this.saveComponents();
     }
 }
 

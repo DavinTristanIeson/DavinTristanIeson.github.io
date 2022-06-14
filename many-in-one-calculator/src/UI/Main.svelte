@@ -11,6 +11,8 @@
     import ModularArithmetic from "../Components/ModularArithmetic.svelte";
     import Sequences from "../Components/Sequences.svelte";
     import ExpressionParser from "../Components/ExpressionParser.svelte";
+    import GraphRepresentation from "../Components/GraphRepresentation.svelte";
+    import Djikstra from "../Components/Djikstra.svelte";
     import { componentManager,CalculationComponent,Direction } from "../Utils";
     import { fly,scale } from "svelte/transition";
     import { bounceInOut } from "svelte/easing";
@@ -26,7 +28,9 @@
         "matrixCalculator":MatrixCalculator,
         "modularArithmetic":ModularArithmetic,
         "sequences":Sequences,
-        "expressionParser":ExpressionParser
+        "expressionParser":ExpressionParser,
+        "graphRepresentation":GraphRepresentation,
+        "djikstra": Djikstra
     };
     let mountedComponents:CalculationComponent[] = [];
     let popupContents:string = "";

@@ -12,8 +12,7 @@ export function useWorker<T,R>(type:string, ...args:T[]): Promise<R>{
     });
 }
 
-export interface DisplayBackend<T> {
-    onUpdate: (updated:T)=>void
+export interface DisplayError {
     onError: (message:string)=>void
 }
 

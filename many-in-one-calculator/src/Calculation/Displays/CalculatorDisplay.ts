@@ -1,7 +1,7 @@
 import type { Calculator,FractionCalculator } from "../Elements/Calculator";
 import type { CalculatorSystem } from "../Elements/CalculatorSystem";
 import { Fraction } from "../Elements/Fraction";
-import { BackendUtils } from "../../Utils/BackEndUtils";
+import { BackendUtils, DisplayError } from "../../Utils/BackEndUtils";
 import type { Matrix } from "mathjs";
 
 export interface CalculatorDisplayI<T extends number|Fraction|Matrix> {
@@ -13,7 +13,7 @@ export interface CalculatorDisplayI<T extends number|Fraction|Matrix> {
     keyboardListener: (e:KeyboardEvent)=>void
 }
 
-export class BasicCalculatorDisplay implements CalculatorDisplayI<number> {
+export class BasicCalculatorDisplay implements CalculatorDisplayI<number>,DisplayError {
     calculatorInput:HTMLInputElement = null;
     pastCalculated:HTMLDivElement = null;
     // vulnerable input makes it so that the moment any input from the calculator buttons happen, the past input just disappears.

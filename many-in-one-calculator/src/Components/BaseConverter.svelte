@@ -1,7 +1,7 @@
 <script type="ts">
     import { createEventDispatcher } from "svelte";
     import { FrontendUtils,useMediaQuery } from "../Utils";
-    import { Converter,BaseConverterUpdatePayload } from "../Calculation/Elements/BaseConversion";
+    import { BaseConverter } from "../Calculation/Elements/BaseConversion";
     import { onDestroy } from "svelte/internal";
     import Dropdown from "../UI/Dropdown.svelte";
     const dispatch = createEventDispatcher();
@@ -13,7 +13,7 @@
     }
 
     const conversionOptions:[string,any][] = [["Binary","binary"],["Octal","octal"],["Decimal","decimal"],["Hexadecimal","hexadecimal"]];
-    const converter = new Converter((e:BaseConverterUpdatePayload)=>{},onError);
+    const converter = new BaseConverter(onError);
 
     function swap(){
         const temp = converter.fromType;
@@ -34,7 +34,7 @@
         converter.convert();
     }
     let isSmallScreen:boolean = false;
-    const unsubscriber = useMediaQuery("screen and (max-width: 420px)").subscribe(data => {isSmallScreen = data});
+    const unsubscriber = useMediaQuery("screen and (max-width: 450px)").subscribe(data => {isSmallScreen = data});
     onDestroy(unsubscriber);
 </script>
 

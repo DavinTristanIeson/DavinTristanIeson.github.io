@@ -1,6 +1,6 @@
 import { Matrix, subtract } from "mathjs";
 import { add, multiply, inv, transpose,det,matrix } from "mathjs";
-import { BackendUtils, DisplayBackend, UserError } from "../../Utils";
+import { BackendUtils, DisplayError, UserError } from "../../Utils";
 import { CalculatorSystem } from "../Elements/CalculatorSystem";
 import type { CalculatorDisplayI } from "./CalculatorDisplay";
 export class MatrixCalculator extends CalculatorSystem<Matrix> {
@@ -58,7 +58,7 @@ export interface MatrixCalculatorUpdatePayload {
     determinant:string;
 }
 
-export class MatrixCalculatorDisplay implements CalculatorDisplayI<Matrix>,DisplayBackend<MatrixCalculatorUpdatePayload> {
+export class MatrixCalculatorDisplay implements CalculatorDisplayI<Matrix>,DisplayError {
     onError: (message: string) => void;
     onUpdate: (updated: {}) => void;
     calculator: CalculatorSystem<Matrix>;

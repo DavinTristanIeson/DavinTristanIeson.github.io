@@ -1,13 +1,5 @@
-import { DisplayBackend, BackendUtils, UserError } from "../../Utils/BackEndUtils";
-
-export type BaseConverterUpdatePayload = {
-    from:string,
-    to:string,
-    fromType:string,
-    toType:string,
-    isTwoComplement:boolean
-}
-export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
+import { BackendUtils, DisplayError, UserError } from "../../Utils/BackEndUtils";
+export class BaseConverter implements DisplayError {
     from:string;
     to:string;
     fromType:string = "decimal";
@@ -17,10 +9,8 @@ export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
     static readonly BASES = [2,8,10,16];
     static readonly BITSTEPS = [2**8,2**16,2**32,2**64];
     private static readonly ERROR_MESSAGES = ["Binary strings must only use 1s or 0s!","Octal numbers should only have digits between 0-7!","Decimal numbers should only digits between 0-9!","Hexadecimal numbers should only contain digits from 0-9 or characters between a-f!"];
-    onUpdate: (updated: BaseConverterUpdatePayload) => void;
     onError: (message: string) => void;
-    constructor(onUpdate:(updated: BaseConverterUpdatePayload) => void,onError:(message:string)=>void){
-        this.onUpdate = onUpdate;
+    constructor(onError:(message:string)=>void){
         this.onError = onError;
     }
     swap(){
@@ -29,13 +19,13 @@ export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
         this.to = temp;
     }
     indexOfType(type:string){
-        return Converter.TYPES.indexOf(type);
+        return BaseConverter.TYPES.indexOf(type);
     }
     convert(){
         let temp;
         try {
-            temp = parseInt(this.from,Converter.BASES[this.indexOfType(this.fromType)]);
-            if (isNaN(temp)) throw new UserError(Converter.ERROR_MESSAGES[this.indexOfType(this.fromType)]);
+            temp = parseInt(this.from,BaseConverter.BASES[this.indexOfType(this.fromType)]);
+            if (isNaN(temp)) throw new UserError(BaseConverter.ERROR_MESSAGES[this.indexOfType(this.fromType)]);
         } catch (e){
             BackendUtils.errorHandling(e,this.onError);
             return;
@@ -43,7 +33,7 @@ export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
         if (this.isTwoComplement && temp < 0){
             let subtracter:number;
             temp = Math.abs(temp);
-            for (let bitcount of Converter.BITSTEPS){
+            for (let bitcount of BaseConverter.BITSTEPS){
                 if (bitcount > temp){
                     subtracter = bitcount;
                     break;
@@ -55,6 +45,6 @@ export class Converter implements DisplayBackend<BaseConverterUpdatePayload> {
             }
             temp = subtracter - temp;
         }
-        this.to = temp.toString(Converter.BASES[this.indexOfType(this.toType)]);
+        this.to = temp.toString(BaseConverter.BASES[this.indexOfType(this.toType)]);
     }
 }

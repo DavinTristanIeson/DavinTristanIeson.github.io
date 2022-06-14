@@ -44,4 +44,7 @@
         display:block;
         max-width: 80px;
     }
+    .dropdown {
+        text-align: left;
+    }
 </style>

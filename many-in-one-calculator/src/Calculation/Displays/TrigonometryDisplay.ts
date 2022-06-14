@@ -1,6 +1,6 @@
-import { BackendUtils } from "../../Utils/BackEndUtils";
+import { BackendUtils, DisplayError } from "../../Utils/BackEndUtils";
 
-export class TrigonometryDisplay {
+export class TrigonometryDisplay implements DisplayError {
     onError: (message: string) => void;
     onUpdate: (updated: { [key: string]: string; }) => void;
     usingDegrees:boolean = true;

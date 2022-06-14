@@ -34,7 +34,7 @@
         trigInput = callback(value).toString();
     }
     let isSmallScreen:boolean = false;
-    const unsubscriber = useMediaQuery("screen and (max-width: 420px)").subscribe(data => {isSmallScreen = data});
+    const unsubscriber = useMediaQuery("screen and (max-width: 450px)").subscribe(data => {isSmallScreen = data});
     onDestroy(unsubscriber);
 </script>
 

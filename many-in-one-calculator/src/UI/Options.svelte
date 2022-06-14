@@ -30,6 +30,9 @@
     function resetOptions(){
         componentManager.resetComponents();
     }
+    function selectAllOptions(){
+        componentManager.selectAllComponents();
+    }
 
     onDestroy(()=>{
         unsubscribeSelected();
@@ -71,12 +74,15 @@ on:click|stopPropagation>
             </ul>
         </div>
     </div>
-    <div class="split-in-two bottom">
+    <div class="split-in-three bottom">
         <button on:click={saveOptions}>
-            Save Options
+            Save
+        </button>
+        <button on:click={selectAllOptions}>
+            Choose All
         </button>
         <button on:click={resetOptions}>
-            Reset Options
+            Reset
         </button>
     </div>
 </div>
@@ -89,6 +95,7 @@ on:click|stopPropagation>
         height:inherit;
         padding:30px;
         background-color: var(--theme-main);
+        overflow-y: auto;
 	}
     h2 {text-align: center;}
     @media screen and (max-width: 720px){
@@ -99,7 +106,15 @@ on:click|stopPropagation>
     .split-in-two {
         column-gap: 10px;
     }
-    ul {padding:0;margin:0;list-style-type: none;}
+    .split-in-three {
+        display:grid;
+        grid-template-columns: 33% 33% 33%;
+        column-gap: 10px;
+    }
+    ul {
+        padding:0;margin:0;
+        list-style-type: none;
+    }
     .checkbox {
         background-color: var(--theme-light);
         padding: 8px;
@@ -117,7 +132,7 @@ on:click|stopPropagation>
         background-color: var(--theme-highlight);
     }
     .bottom {
-        position:absolute;
+        position:sticky;
         bottom:10%;
         width:inherit;
     }
