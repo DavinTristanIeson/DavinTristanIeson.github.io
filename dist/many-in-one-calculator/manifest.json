@@ -3,33 +3,33 @@
     "short_name": "Mi1 Calc",
     "icons":[
         {
-            "src":"/Resources/app-icon/icon_48x48.png",
+            "src":"./Resources/app-icon/icon_48x48.png",
             "type":"image/png",
             "sizes":"48x48"
         },
         {
-            "src":"/Resources/app-icon/icon_128x128.png",
+            "src":"./Resources/app-icon/icon_128x128.png",
             "type":"image/png",
             "sizes":"128x128"
         },
         {
-            "src":"/Resources/app-icon/icon_256x256.png",
+            "src":"./Resources/app-icon/icon_256x256.png",
             "type":"image/png",
             "sizes":"256x256"
         },
         {
-            "src":"/Resources/app-icon/icon_512x512.png",
+            "src":"./Resources/app-icon/icon_512x512.png",
             "type":"image/png",
             "sizes":"512x512"
         },
         {
-            "src":"/Resources/app-icon/icon_640x640.png",
+            "src":"./Resources/app-icon/icon_640x640.png",
             "type":"image/png",
             "sizes":"640x640",
             "purpose":"any maskable"
         }
     ],
-    "start_url":"/",
+    "start_url":"./",
     "display":"standalone",
     "background_color":"#ffffff",
     "theme_color":"#57AF55",
