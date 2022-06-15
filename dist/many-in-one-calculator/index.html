@@ -9,8 +9,8 @@
 	<title>Many-In-One Calculator</title>
 	
 	<link rel="shortcut icon" type="image/x-icon" href='./favicon.ico'>
-	<link rel="icon" type="image/png" href="/Resources/app-icon/icon_256x256.png">
-	<link rel="apple-touch-icon" type="image/png" href="/Resources/app-icon/icon_128x128.png">
+	<link rel="icon" type="image/png" href="./Resources/app-icon/icon_256x256.png">
+	<link rel="apple-touch-icon" type="image/png" href="./Resources/app-icon/icon_128x128.png">
 	<link rel='stylesheet' href='./build/bundle.css'>
 	
 	<link rel="manifest" href="./manifest.json">
@@ -30,7 +30,7 @@
 		if ("serviceWorker" in navigator) {
 			window.addEventListener("load", () => {
 				navigator.serviceWorker.register("./sw.js").then((reg) => {
-					console.log("[ServiceWorker] Service worker successfully registered");
+					// console.log("[ServiceWorker] Service worker successfully registered");
 				});
 			});
 		}
