@@ -19,7 +19,7 @@
 </script>
 
 <Header/>
-<button class="opentab-button left" on:click={()=>{switchTabs("Notes")}}>
+<button class="opentab-button left" on:click={()=>{switchTabs("Notes")}} title="Notes">
 	<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<line x1="40.3769" y1="6.32857" x2="6.37689" y2="45.3286" stroke="black"/>
 		<path d="M51.0744 14.7046L17.5887 52.325" stroke="black"/>
@@ -33,7 +33,7 @@
 		<path d="M6.5 57C12.6667 57.1667 25.8 55.8 29 49C33 40.5 42 53 48 53.5C54 54 55 49 57 49" stroke="black" stroke-width="0.8" stroke-linecap="round"/>
 	</svg>
 </button>
-<button class="opentab-button right" on:click={()=>{switchTabs("Options")}}>
+<button class="opentab-button right" on:click={()=>{switchTabs("Options")}} title="Options">
 	<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path d="M54 28.5V44C54 49.5228 49.5228 54 44 54H16C10.4772 54 6 49.5228 6 44V17C6 11.4772 10.4772 7 16 7H42" stroke="black" stroke-linecap="round"/>
 		<line x1="11.9899" y1="28.23" x2="28.0294" y2="44.2695" stroke="black" stroke-width="1.4" stroke-linecap="round"/>
@@ -267,6 +267,8 @@ direction = { Direction.RIGHT }>
     /* Firefox */
     :global(input[type=number]) {
         -moz-appearance: textfield;
+		-webkit-appearance: textfield;
+		appearance: textfield;
 	}
 	:global(.shorter) {max-width: 80px; font-size: 1.2em;}
 	:global(.bigchar) {font-size: 1.4em;}

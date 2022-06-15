@@ -14,7 +14,7 @@
 </script>
 
 <article>
-    <div id="past-calculated" bind:this={calculator.pastCalculated}></div>
+    <div class="past-calculated" bind:this={calculator.pastCalculated}></div>
     <input type="number" id="calculator-input" class="full-width"
     bind:this = {calculator.calculatorInput} placeholder="0"
     on:keydown = {(e)=>{calculator.keyboardListener(e);}}>
@@ -53,7 +53,7 @@
 </article>
 
 <style>
-    #past-calculated {
+    .past-calculated {
         color: var(--theme-separator);
         text-align: left;
         margin-top: 20px;

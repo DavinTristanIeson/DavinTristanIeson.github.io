@@ -39,7 +39,7 @@
 </script>
 
 <div class="center-h">
-    <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen} id="select-types">
+    <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen} class="select-types">
         <Dropdown contents={conversionOptions} bind:selected={converter.fromType}
             on:selected={(e)=>{convert(true)}}
         />
@@ -60,7 +60,7 @@
 </div>
 
 <style>
-    #select-types {
+    .select-types {
         margin-bottom: 20px;
     }
     button {padding: 10px 20px;}

@@ -64,7 +64,7 @@
     onDestroy(unsubscriber);
 </script>
 <div class="center-h">
-    <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen} id="select-types">
+    <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen}>
         <Dropdown contents={GraphRepresentationConverter.ALL_TYPES}
             on:selected={(e)=>{convert(true)}}
             bind:selected={converter.fromType}

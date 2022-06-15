@@ -18,7 +18,7 @@
 </script>
 
 <article>
-    <div id="past-calculated" bind:this={calculator.pastCalculated}></div>
+    <div class="past-calculated" bind:this={calculator.pastCalculated}></div>
     <div>
         <input type="number" class:focused = {focusedOnNumerator}
         class="full-width"
@@ -55,7 +55,7 @@
         <button class="calc-btn" on:click={()=>{calculator.calculate("exp2")}}>x&#178;</button>
         <button class="calc-btn" on:click={()=>{calculator.switchFocus()}}>&#9660;</button>
         <button class="calc-btn" on:click={()=>{calculator.calculate("inv")}}>1/x</button>
-        <button class="calc-btn disabled" on:click={()=>{}}></button>
+        <button class="calc-btn disabled" on:click={()=>{}} title="None"></button>
     </div>
     <table>
         <tr>
@@ -70,7 +70,7 @@
 </article>
 
 <style>
-    #past-calculated {
+    .past-calculated {
         color: var(--theme-separator);
         text-align: left;
         margin-top: 20px;
