@@ -55,7 +55,6 @@ import { BackendUtils, Direction, FrontendUtils } from "../Utils";
         },onError)) return;
         try {
             simplifyResult = simplify(simplifyString).toString();
-            console.log(simplifyResult,simplifyString)
         } catch (e){
             onError(e.toString());
         }

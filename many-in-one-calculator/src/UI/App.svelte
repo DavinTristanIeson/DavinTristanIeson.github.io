@@ -277,9 +277,16 @@ direction = { Direction.RIGHT }>
         border: 2px solid black;
         padding: 10px;
         font-size: 1.2em;
+		white-space: pre-wrap;
 	}
 	/* lazy fix for .result overflowing */
 	:global(.full-width.result){width: 95%}
+	:global(.full-width th){width: 30%;}
+	:global(.prewrap){
+		white-space: pre-wrap;
+		text-align: left;
+		padding-left: 5px;
+	}
 	:global(textarea) {
         width: 100%;
         max-height: 500px;

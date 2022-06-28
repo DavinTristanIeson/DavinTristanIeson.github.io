@@ -1,4 +1,4 @@
-const CACHE_NAME = "pwa-cache-v1";
+const CACHE_NAME = "pwa-cache-v2";
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
@@ -44,13 +44,10 @@ self.addEventListener('activate', (evt) => {
   
 self.addEventListener('fetch', (evt) => {
     // console.log('[ServiceWorker] Fetch', evt.request.url);
-    // Add fetch event handler here.
-    if (evt.request.mode !== 'navigate') {
-      // Not a page navigation, bail.
-      return;
-    }
+    if (evt.request.mode !== 'navigate') return;
     evt.respondWith(
-        fetch(evt.request).catch(() => {
+        fetch(evt.request).catch((e) => {
+            console.log(e);
             return caches.open(CACHE_NAME).then((cache) => {
                 return cache.match(evt.request.url);
             });

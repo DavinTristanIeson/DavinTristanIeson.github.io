@@ -91,10 +91,17 @@ For derivatives, you need to provide the variable to be derived (d/d{})`),
         new CalculationComponent("Graph Representation",
 `Converts between various representations of graph, such as adjacency lists, adjacency matrices, and edge lists.
 This component also handles the analysis of the graph and produces a report including whether the graph has cycles in them, is bipartite, is connected, and also generates its in-degrees, out-degrees, and eulerian path if it exists.
-Note that the graphs are treated as directed by default.`),
+Note that the graphs are treated as directed by default.
+It can also convert a directed graph to an undirected graph and vice versa.
+NOTE: For edge lists and adjacency lists converting to adjacency matrices, all vertices must be listed (even those without an edge) or those edges whose vertices are unmentioned will be ignored`),
         new CalculationComponent("Djikstra",
 `Executes Djikstra's algorithm on the provided weighted, directed adjacency list and produces a table containing all the paths and their respective length.
-Note that Djikstra's algorithm doesn't perform as expected for graphs with negative values.`)
+Note that Djikstra's algorithm doesn't perform as expected for graphs with negative values.`),
+        new CalculationComponent("Binary Search Tree",
+`Converts the source array into a Binary Search Tree and shows the pre-order, in-order, and post-order traversal of it, as well as the structure of the tree represented in an Adjacency List.
+You can also perform huffman encoding using a source string to calculate the frequencies and create the dictionary, and encode any string using said dictionary. Characters not in the dictionary will stay unencoded.`),
+        new CalculationComponent("Minimum Spanning Tree",
+`Finds the Minimum Spanning Tree of a weighted, directed adjacency list using Kruskal's Algorithm.`)
     ];
     static STORAGE_NAME = "components";
     constructor(){

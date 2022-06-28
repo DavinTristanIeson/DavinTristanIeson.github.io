@@ -227,7 +227,7 @@ export class Graph {
     exploreUntilLoop(current:string,visited:{[key:string]:boolean}): boolean {
         if (visited[current]) return true;
         visited[current] = true;
-        if (this.graph?.[current] || this.graph[current].length === 0) return true;
+        if (this.graph[current] === undefined || this.graph[current].length === 0) return false;
         for (let edge of this.graph[current]){
             if (this.exploreUntilLoop(edge.endpoint,visited)) return true;
         }
@@ -274,6 +274,86 @@ export class Graph {
         }
         return result;
     }
+    kruskal(): WeightedEdgeList {
+        const result:WeightedEdgeList = [];
+        const edgeList = this.toEdgeList();
+        edgeList.sort((a,b)=>a[2] - b[2]);
+        
+        let i = 0, e = 0;
+        const parent = this.mapVertices(v => v);
+        const rank = this.mapVertices(_ => 0);
+        while (e < this.length - 1){
+            const cur = edgeList[i];
+            i++;
+            const parent1 = this.find_set(parent,cur[0]);
+            const parent2 = this.find_set(parent,cur[1]);
+            if (parent1 !== parent2){
+                e++;
+                result.push([...cur]);
+                this.union_set(parent,rank,parent1,parent2);
+            }
+        }
+        return result;
+    }
+    find_set(parent:{[key:string]:string},node:string){
+        if (parent[node] == node) return node;
+        return this.find_set(parent,parent[node]);
+    }
+    union_set(parent:{[key:string]:string},rank:{[key:string]:number},node1:string,node2:string){
+        const parent1 = this.find_set(parent,node1);
+        const parent2 = this.find_set(parent,node2);
+        if (rank[parent1] < rank[parent2]) parent[parent1] = parent2;
+        else if (rank[parent2] > rank[parent2]) parent[parent2] = parent1;
+        else {
+            parent[parent2] = parent1;
+            rank[parent1]++;
+        }
+    }
+    prims(source:string): WeightedEdgeList {
+        // CREDIT: https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/
+        const parent:number[] = [];
+        const adjmat = Graph.toAdjacencyMatrix(this.graph);
+        const header = adjmat.shift() as string[];
+        const keys = Array(adjmat.length).fill(Infinity);
+        const mstSet = Array(adjmat.length).fill(false);
+
+        const start = header.indexOf(source);
+        if (start < 0) throw new UserError("Source not found in graph!");
+        keys[start] = 0; parent[start] = -1;
+        for (let e = 0; e < adjmat.length-1; e++){
+            let u = this.primsMinKey(keys,mstSet);
+            mstSet[u] = true;
+            for (let v = 0; v < adjmat.length; v++){
+                if (adjmat[u][v] && mstSet[v] == false && adjmat[u][v] < keys[v]){
+                    parent[v] = u; keys[v] = adjmat[u][v];
+                }
+            }
+        }
+        const edgeList:WeightedEdgeList = [];
+        for (let i = 0; i < adjmat.length; i++){
+            if (parent[i] < 0) continue;
+            edgeList.push([header[parent[i]],header[i],adjmat[i][parent[i]] as number])
+        }
+        return edgeList;
+    }
+    private primsMinKey(keys:number[],mstSet:boolean[]){
+        let min = Infinity, min_index;
+        for (let v = 0; v < this.length; v++){
+            if (!mstSet[v] && keys[v] < min){
+                min = keys[v]; min_index = v;
+            }
+        }
+        return min_index;
+    }
+    toEdgeList(): WeightedEdgeList {
+        const edgeList:WeightedEdgeList = []
+        for (let v of this.vertices){
+            for (let e of this.graph[v]){
+                edgeList.push([v,e.endpoint,e.weight]);
+            }
+        }
+        return edgeList;
+    }
     static toWeightedAdjacencyList(adjlist:AdjacencyList): WeightedAdjacencyList {
         const weighted:WeightedAdjacencyList = {};
         for (let vertex in adjlist){
@@ -283,5 +363,27 @@ export class Graph {
             }
         }
         return weighted;
+    }
+    static toAdjacencyMatrix(adjlist:GraphAdjacencyList): AdjacencyMatrix {
+        const matrix:AdjacencyMatrix = [];
+        const adjarr = Object.entries(adjlist);
+        matrix.push(adjarr.map(x => x[0]));
+        for (let r = 0; r < adjarr.length; r++){
+            matrix.push(Array(adjarr.length).fill(0));
+            for (let c = 0; c < adjarr.length; c++){
+                const findme = adjarr[r][1].find(e => e.endpoint === adjarr[c][0]);
+                if (!findme) continue;
+                matrix[r+1][c] = findme.weight;
+            }
+        }
+        return matrix;
+    }
+    static toParseableAdjacencyList(graph:GraphAdjacencyList): WeightedAdjacencyList {
+        const vertices = Object.keys(graph);
+        const result = {}
+        for (let v of vertices){
+            result[v] = graph[v].map(edge => [edge.endpoint,edge.weight])
+        }
+        return result;
     }
 }

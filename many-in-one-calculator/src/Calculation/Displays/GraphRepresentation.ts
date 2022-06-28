@@ -130,7 +130,6 @@ export class GraphRepresentationConverter implements DisplayError {
     }
     addRemoveWeight(){
         try {
-
             if (this.isWeighted){
                 let parsed:WeightedAdjacencyList|AdjacencyMatrix|WeightedEdgeList;
                 let light:AdjacencyList|AdjacencyMatrix|EdgeList;
@@ -176,7 +175,60 @@ export class GraphRepresentationConverter implements DisplayError {
             this.onError("Failed to parse the inputted graph");
             return;
         }
-    }    
+    }
+    addRemoveDirection(toDirected:boolean){
+        const execute = (adjmat:AdjacencyMatrix)=>{
+            if (toDirected) return GraphRepresentationConverter.toDirectedGraph(adjmat);
+            else return GraphRepresentationConverter.toUndirectedGraph(adjmat);
+        }
+        try {
+            if (this.isWeighted){
+                let parsed:AdjacencyMatrix;
+                let directmat:AdjacencyMatrix;
+                switch (this.fromType){
+                    case GraphRepresentationType.ADJACENCY_LIST:
+                        parsed = GraphRepresentationConverter.toWeightedAdjacencyMatrix(GraphParser.parseWeightedAdjacencyListString(this.from));
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyWeightedAdjacencyList(GraphRepresentationConverter.fromWeightedAdjacencyMatrix(directmat));
+                        break;
+                    case GraphRepresentationType.ADJACENCY_MATRIX:
+                        parsed = GraphParser.parseAdjacencyMatrixString(this.from);
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyAdjacencyMatrix(directmat);
+                        break;
+                    case GraphRepresentationType.EDGE_LIST:
+                        parsed = GraphRepresentationConverter.toWeightedAdjacencyMatrix(GraphRepresentationConverter.fromWeightedEdgeList(GraphParser.parseWeightedEdgeListString(this.from)));
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyEdgeList(GraphRepresentationConverter.toWeightedEdgeList(GraphRepresentationConverter.fromWeightedAdjacencyMatrix(directmat)));
+                        break;
+                }
+            } else {
+                let parsed:AdjacencyMatrix;
+                let directmat:AdjacencyMatrix;
+                switch (this.fromType){
+                    case GraphRepresentationType.ADJACENCY_LIST:
+                        parsed = GraphRepresentationConverter.toAdjacencyMatrix(GraphParser.parseAdjacencyListString(this.from));
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyAdjacencyList(GraphRepresentationConverter.fromAdjacencyMatrix(directmat));
+                        break;
+                    case GraphRepresentationType.ADJACENCY_MATRIX:
+                        parsed = GraphParser.parseAdjacencyMatrixString(this.from);
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyAdjacencyMatrix(directmat);
+                        break;
+                    case GraphRepresentationType.EDGE_LIST:
+                        parsed = GraphRepresentationConverter.toAdjacencyMatrix(GraphRepresentationConverter.fromEdgeList(GraphParser.parseEdgeListString(this.from)));
+                        directmat = execute(parsed);
+                        this.from = GraphParser.stringifyEdgeList(GraphRepresentationConverter.toEdgeList(GraphRepresentationConverter.fromAdjacencyMatrix(directmat)));
+                        break;
+                }
+            }
+        } catch (e){
+            console.warn(e);
+            this.onError("Failed to parse the inputted graph");
+            return;
+        }
+    }
 
     static toAdjacencyMatrix(adjlist:AdjacencyList): AdjacencyMatrix {
         const matrix:AdjacencyMatrix = [];
@@ -318,5 +370,33 @@ export class GraphRepresentationConverter implements DisplayError {
             light.push([edge[0],edge[1]]);
         }
         return light;
+    }
+    static toUndirectedGraph(adjmat:AdjacencyMatrix){
+        const header = adjmat.shift();
+        const result:AdjacencyMatrix = adjmat.map(r => r.map(c => c));
+        for (let r = 0; r < adjmat.length; r++){
+            for (let c = 0; c < r; c++){
+                if (result[r][c] > 0 && result[c][r] > 0){
+                    result[r][c] = 0;
+                }
+            }
+        }
+        result.unshift(header);
+        return result;
+    }
+    static toDirectedGraph(adjmat:AdjacencyMatrix){
+        const header = adjmat.shift();
+        const result:AdjacencyMatrix = adjmat.map(r => r.map(c => c));
+        for (let r = 0; r < adjmat.length; r++){
+            for (let c = 0; c < r; c++){
+                if (result[r][c] > 0){
+                    result[c][r] = result[r][c];
+                } else if (result[c][r] > 0){
+                    result[r][c] = result[c][r];
+                }
+            }
+        }
+        result.unshift(header);
+        return result;
     }
 }

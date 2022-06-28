@@ -58,10 +58,22 @@
         converter.from = converter.from;
         isWeighted = converter.isWeighted;
     }
+    function changeDirection(toDirected:boolean){
+        converter.addRemoveDirection(toDirected);
+        converter.from = converter.from;
+    }
 
     let isSmallScreen:boolean = false;
     const unsubscriber = useMediaQuery("screen and (max-width: 540px)").subscribe(data => {isSmallScreen = data});
     onDestroy(unsubscriber);
+
+/*
+0 (1,4) (7,8)
+2 (8,2) (5,4) (3,7)
+3 (4,9)
+5 (6,2)
+6 (7,1)
+*/
 </script>
 <div class="center-h">
     <div class:center-v = {!isSmallScreen} class:center-h = {isSmallScreen}>
@@ -109,6 +121,10 @@
     <button class="full-width" on:click={()=>{convert(false)}}>Convert</button>
     <button class="full-width" on:click={()=>{addRemoveWeight()}}>{isWeighted ? "Remove" : "Add"} Weight</button>
     <button class="full-width" on:click={()=>{analyze()}}>Analyze</button>
+    <div class="split-in-two full-width">
+        <button on:click={()=>{changeDirection(true)}}>To Directed</button>
+        <button on:click={()=>{changeDirection(false)}}>To Undirected</button>
+    </div>
     <table class="full-width">
         <tr>
             <th>Vertices</th>

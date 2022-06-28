@@ -13,6 +13,8 @@
     import ExpressionParser from "../Components/ExpressionParser.svelte";
     import GraphRepresentation from "../Components/GraphRepresentation.svelte";
     import Djikstra from "../Components/Djikstra.svelte";
+    import MinimumSpanningTree from "../Components/MinimumSpanningTree.svelte";
+    import BinarySearchTree from "../Components/BinarySearchTree.svelte";
     import { componentManager,CalculationComponent,Direction } from "../Utils";
     import { fly,scale } from "svelte/transition";
     import { bounceInOut } from "svelte/easing";
@@ -30,7 +32,9 @@
         "sequences":Sequences,
         "expressionParser":ExpressionParser,
         "graphRepresentation":GraphRepresentation,
-        "djikstra": Djikstra
+        "djikstra": Djikstra,
+        "binarySearchTree":BinarySearchTree,
+        "minimumSpanningTree":MinimumSpanningTree,
     };
     let mountedComponents:CalculationComponent[] = [];
     let popupContents:string = "";

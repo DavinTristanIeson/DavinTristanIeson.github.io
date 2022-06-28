@@ -62,7 +62,6 @@ export class GraphParser {
         ).join('\n');
     }
     static stringifyAdjacencyMatrix(adjmat:AdjacencyMatrix):string {
-        console.log(adjmat);
         return adjmat.map(row => row.join(' ')).join('\n');
     }
     static stringifyEdgeList(edgelist:EdgeList|WeightedEdgeList):string {
