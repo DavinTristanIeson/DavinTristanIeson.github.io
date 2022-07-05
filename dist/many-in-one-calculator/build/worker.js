@@ -82,7 +82,7 @@ const callers = {
         }
         return returnValue;
     },
-    factorial(from,to) {
+    factorial(from,to=1) {
         let returned = 1;
         while (from > to){
             returned *= from;
@@ -109,6 +109,7 @@ const callers = {
             sequence.push([]);
             for (let c = 0; c <= r; c++){
                 sequence[r-from].push(this.combination(r,c))
+                console.log(this.combination(r,c),r,c);
             }
         }
         return sequence;
