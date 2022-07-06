@@ -28,14 +28,14 @@ export class CalculationComponentManager {
 `A basic calculator for fundamental mathematics calculation, including the arithmetic operators, logarithm, square root, exponent, modulo, and inverse.
 Shortcuts:Type in the arithmetic operator '+','-','*','x','/','%','^','!' or '=' to directly perform the actions associated with those symbols.
 Press Enter to retrieve the results of the operation, Page Down to go back to the previous answer, Delete to clear current input, or Ctrl + Delete to clear all.
-Because '-' is used as a shortcut for subtraction, press '_' in the input field for minus signs.
+Because '-' is used as a shortcut for subtraction, use Alt to switch the sign of the number rather than typing a '-' character.
 Due to the nature of JavaScript numbers, accuracy can be guaranted up until ${Number.MAX_SAFE_INTEGER}`),
         new CalculationComponent(
             "Fractional Calculator",
 `A calculator for operations on fractions. It is considerably limited compared to the basic calculator. Computed fractions are automatically simplified. Additional conversions are provided at the bottom for mixed fractions and its decimal value.
 Type in the arithmetic operator '+','-','*','x','/','%','^', or '=' to directly perform the actions associated with those symbols.
 Press Enter to retrieve the results of the operation, Page Down to go back to the previous answer, Delete to clear current input, or Ctrl + Delete to clear all.
-Because '-' is used as a shortcut for subtraction, press '_' in the input field for minus signs.Press the up or down arrow to switch the focused input, or use the arrow buttons in the calculator itself.
+Because '-' is used as a shortcut for subtraction, use Alt to switch the sign of the number rather than typing a '-' character.Press the up or down arrow to switch the focused input, or use the arrow buttons in the calculator itself.
 Due to the nature of JavaScript numbers, accuracy can be guaranted up until ${Number.MAX_SAFE_INTEGER}`),
         new CalculationComponent("Factors",
 `Deals with factorization. Supported actions include: isPrime (checks if a number is a prime or not), factorize (outputs the factor table and the factor tree of the number), GCD (Greatest Common Divisor), and LCM (Lowest Common Multiple).

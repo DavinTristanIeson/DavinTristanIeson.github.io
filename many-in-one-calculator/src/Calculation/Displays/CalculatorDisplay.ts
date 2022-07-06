@@ -146,6 +146,9 @@ export class BasicCalculatorDisplay implements CalculatorDisplayI<number>,Displa
             case '%': this.calculate("mod"); break;
             case '^': this.calculate("exp"); break;
             case '!': this.calculate("fact"); break;
+            case 'Alt':
+                this.flipSign();
+                e.preventDefault(); break;
             case "Enter":
                 e.preventDefault();
                 this.calculate(""); break;
@@ -293,6 +296,9 @@ export class FractionCalculatorDisplay implements CalculatorDisplayI<Fraction> {
             case '*': this.calculate("mult"); break;
             case '/': this.calculate("div"); break;
             case '^': this.calculate("exp2"); break;
+            case 'Alt':
+                this.flipSign();
+                e.preventDefault(); break;
             case "Enter":
                 e.preventDefault();
                 this.calculate(""); break;
